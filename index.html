@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="styles.css">
     <title>Students</title>
 </head>
@@ -8,9 +10,9 @@
 
     <header>
         <div class="home">
-            <button class="home-btn">
+            <a href="index.html">
                 <img src="home.svg" width="50" height="50">
-            </button>
+            </a>
         </div>
 
         <div class="right-menu">
@@ -31,9 +33,15 @@
     </header>
     <div class="page">
         <aside class="navigation">
-            <nav>Dashboard</nav>
-            <nav>Students</nav>
-            <nav>Tasks</nav>
+            <nav>
+                <a href="dashboard.html">Dashboard</a>
+            </nav>
+            <nav>
+                <a href="index.html" class="active-page">Students</a>
+            </nav>
+            <nav>
+                <a href="tasks.html">Tasks</a>
+            </nav>
         
         </aside>
 
@@ -42,7 +50,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th><input type="checkbox"></th>
+                        <td><input type="checkbox"></th>
                         <th>Group</th>
                         <th>Name</th>
                         <th>Gender</th>
@@ -53,7 +61,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <th><input type="checkbox"></th>                
+                        <td><input type="checkbox"></td>                
                         <td>PZ-22</td>
                         <td>Kamala Bogdan</td>
                         <td>M</td>
@@ -71,7 +79,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th><input type="checkbox"></th>                
+                        <td><input type="checkbox"></td>                
                         <td>PZ-12</td>
                         <td>Rizz Master</td>
                         <td>M</td>
