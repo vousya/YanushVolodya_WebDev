@@ -8,47 +8,6 @@ body {
     /*overflow: hidden;*/
 }
 
-header {
-    background-color: pink;
-    height: 75px;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 10px;
-}
-
-.active-page {
-    background-color: black;
-}
-
-.right-menu {
-    display: flex;
-    align-items: center;
-    gap: 25px;
-}
-
-.home-btn, .bell-btn, .profile-btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: transparent;
-    border: none;
-}
-
-.bell, .profile {
-    display: flex;
-    background: transparent ;
-    justify-content: center;
-    align-items: center;
-}
-
-.profile-text {
-    font-size: 24px;
-    margin-left: 10px;
-}
-
 .page {
     display: flex;
     width: 100%;
@@ -59,32 +18,6 @@ main {
     padding: 20px;
     flex: 5;
     justify-items: center;
-}
-
-.navigation {    
-    min-width: 150px;
-    max-width: 250px;
-    flex: 1;
-    background-color: antiquewhite;
-    padding: 10px;
-    justify-content: center;
-}
-
-.navigation nav {
-    font-size: 24px;
-    padding: 10px;
-    transition: all 0.3s ease-in-out;
-}
-
-.navigation nav:hover {
-    transform: translateX(10px);
-    background-color: #f0f0f0de; 
-    color: #0032d4;
-}
-
-@keyframes bounce {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(15px); }
 }
 
 table {
