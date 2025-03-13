@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
     <link rel="stylesheet" type="text/css" href="header.css">
     <link rel="stylesheet" type="text/css" href="navigation.css">
-
+    
     <title>Students</title>
 </head>
 <body>
@@ -14,20 +14,20 @@
     <header>
         <div class="home">
             <a href="index.html">
-                <img src="home.svg" width="50" height="50">
+                <img src="resources/home.svg" width="50" height="50">
             </a>
         </div>
 
         <div class="right-menu">
             <div class="bell">
-                <button class="bell-btn">
-                    <img src="bell.svg" width="50" height="50">
+                <button class="bell-btn" onclick="bell_animation(this)">
+                    <img src="resources/bell.svg" width="50" height="50">
                 </button>
             </div>
 
             <div class="profile">
                 <button class="profile-btn">
-                    <img src="profile.svg" width="50" height="50">
+                    <img src="resources/profile.svg" width="50" height="50">
                 <span class="profile-text">Vovus Pokus</span>
                 </button>
             </div>
@@ -36,17 +36,32 @@
     </header>
     <div class="page">
         <aside class="navigation">
-            <nav>
-                <a href="dashboard.html">Dashboard</a>
-            </nav>
-            <nav>
-                <a href="index.html" class="active-page">Students</a>
-            </nav>
-            <nav>
-                <a href="tasks.html">Tasks</a>
-            </nav>
+            <ul>
+                <nav>
+                    <a href="dashboard.html">Dashboard</a>
+                </nav>
+                <nav>
+                    <a href="index.html" class="active-page">Students</a>
+                </nav>
+                <nav>
+                    <a href="tasks.html">Tasks</a>
+                </nav>
+            </ul>
         
         </aside>
+
+        <div id="add-student" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span>Warning</span>
+                    <span id="close-add-window" class="close">&times;</span>
+                </div>
+                <div class="content">
+                    <span>Are you sure you want to delete {student}</span>
+                </div>
+                
+            </div>
+        </div>
 
         <main>
             <h1>Students</h1>
@@ -54,8 +69,8 @@
                 <thead>
                     <tr>
                         <td><input type="checkbox"></th>
-                        <th>Group</th>
-                        <th>Name</th>
+                            <th>Group</th>
+                            <th>Name</th>
                         <th>Gender</th>
                         <th>Birthday</th>
                         <th>Status</th>
@@ -70,14 +85,14 @@
                         <td>M</td>
                         <td>12.12.2003</td>
                         <td>
-                            <img src="status-inactive.svg">
+                            <img src="resources/status-inactive.svg">
                         </td>
                         <td>
                             <button class="edit-btn">
-                                <img src="edit.svg">
+                                <img src="resources/edit.svg">
                             </button>
-                            <button>
-                                <img src="add.svg">
+                            <button class="add-btn">
+                                <img src="resources/add.svg">
                             </button>
                         </td>
                     </tr>
@@ -88,14 +103,14 @@
                         <td>M</td>
                         <td>13.01.2005</td>
                         <td>
-                            <img src="status-inactive.svg">
+                            <img src="resources/status-inactive.svg">
                         </td>
                         <td>
                             <button class="edit-btn">
-                                <img src="edit.svg">
+                                <img src="resources/edit.svg">
                             </button>
-                            <button>
-                                <img src="add.svg">
+                            <button class="add-btn">
+                                <img src="resources/add.svg">
                             </button>
                         </td>
                     </tr>
@@ -106,14 +121,14 @@
                         <td>F</td>
                         <td>31.08.2015</td>
                         <td>
-                            <img src="status-active.svg">
+                            <img src="resources/status-active.svg">
                         </td>
                         <td>
                             <button class="edit-btn">
-                                <img src="edit.svg">
+                                <img src="resources/edit.svg">
                             </button>
-                            <button>
-                                <img src="add.svg">
+                            <button class="add-btn">
+                                <img src="resources/add.svg">
                             </button>
                         </td>
                     </tr>
@@ -124,14 +139,14 @@
                         <td>F</td>
                         <td>8.01.2005</td>
                         <td>
-                            <img src="status-inactive.svg">
+                            <img src="resources/status-inactive.svg">
                         </td>
                         <td>
                             <button class="edit-btn">
-                                <img src="edit.svg">
+                                <img src="resources/edit.svg">
                             </button>
-                            <button>
-                                <img src="add.svg">
+                            <button class="add-btn">
+                                <img src="resources/add.svg">
                             </button>
                         </td>
                     </tr>
@@ -142,14 +157,14 @@
                         <td>M</td>
                         <td>11.01.2000</td>
                         <td>
-                            <img src="status-inactive.svg">
+                            <img src="resources/status-inactive.svg">
                         </td>
                         <td>
                             <button class="edit-btn">
-                                <img src="edit.svg">
+                                <img src="resources/edit.svg">
                             </button>
-                            <button>
-                                <img src="add.svg">
+                            <button class="add-btn">
+                                <img src="resources/add.svg">
                             </button>
                         </td>
                     </tr>
@@ -161,6 +176,7 @@
     </div>
     
     
-
+    
 </body>
+<script src="scripts.js"></script>
 </html>
