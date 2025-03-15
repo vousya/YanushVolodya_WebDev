@@ -6,8 +6,7 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
     <link rel="stylesheet" type="text/css" href="header.css">
     <link rel="stylesheet" type="text/css" href="navigation.css">
-    <script src="scripts.js"></script>
-
+    
     <title>Dashboard</title>
 </head>
 <body>
@@ -17,36 +16,38 @@
                 <img src="resources/home.svg" width="50" height="50">
             </a>
         </div>
-
+        
         <div class="right-menu">
-            <div class="bell">
-                <button class="bell-btn" onclick="bell_animation(this)">
+            <div id="bell">
+                <button class="bell-btn">
                     <img src="resources/bell.svg" width="50" height="50">
                 </button>
             </div>
-
+            
             <div class="profile">
                 <button class="profile-btn">
                     <img src="resources/profile.svg" width="50" height="50">
-                <span class="profile-text">Vovus Pokus</span>
+                    <span class="profile-text">Vovus Pokus</span>
                 </button>
             </div>
         </div>
-
+        
     </header>
     <div class="page">
         <aside class="navigation">
-            <nav>
-                <a href="dashboard.html" class="active-page">Dashboard</a>
-            </nav>
-            <nav>
-                <a href="index.html">Students</a>
-            </nav>
-            <nav>
-                <a href="tasks.html">Tasks</a>
-            </nav>
-        
+            <ul>
+                <nav>
+                    <a href="dashboard.html" class="active-page">Dashboard</a>
+                </nav>
+                <nav>
+                    <a href="index.html">Students</a>
+                </nav>
+                <nav>
+                    <a href="tasks.html">Tasks</a>
+                </nav>
+            </ul>
         </aside>
     </div>
+    <script src="scripts.js"></script>
 </body>
 </html>

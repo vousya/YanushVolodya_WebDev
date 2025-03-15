@@ -4,7 +4,12 @@
     flex: 1;
     background-color: antiquewhite;
     padding: 10px;
-    justify-content: center;
+    justify-items: left;
+}
+
+.navigation ul {
+    padding: 0px;
+    margin: 0px;
 }
 
 .navigation a {
@@ -30,7 +35,7 @@
 }
 
 .active-page {
-    /* background-color: rgba(0, 0, 255, 0.137); */
+    background-color: rgba(0, 0, 255, 0.137);
     font-size: 32px;
     padding: 0 0 0 20px;
 }

@@ -1,9 +1,9 @@
 
 header {
+    display: flex;
     background-color: pink;
     height: 75px;
     width: 100%;
-    display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;

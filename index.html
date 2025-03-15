@@ -10,7 +10,6 @@
     <title>Students</title>
 </head>
 <body>
-
     <header>
         <div class="home">
             <a href="index.html">
@@ -19,8 +18,8 @@
         </div>
 
         <div class="right-menu">
-            <div class="bell">
-                <button class="bell-btn" onclick="bell_animation(this)">
+            <div id="bell">
+                <button class="bell-btn">
                     <img src="resources/bell.svg" width="50" height="50">
                 </button>
             </div>
@@ -47,25 +46,37 @@
                     <a href="tasks.html">Tasks</a>
                 </nav>
             </ul>
-        
         </aside>
 
-        <div id="add-student" class="modal">
+        <div id="remove-student" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
                     <span>Warning</span>
-                    <span id="close-add-window" class="close">&times;</span>
+                    <span id="close-remove-window" class="close">&times;</span>
                 </div>
                 <div class="content">
-                    <span>Are you sure you want to delete {student}</span>
+                    <span id="remove-text"></span>
                 </div>
-                
+                <div class="choice">
+                    <button id="cancel-remove-btn">Cancel</button>
+                    <button id="action-remove-btn">OK</button>
+                </div>
             </div>
         </div>
 
         <main>
-            <h1>Students</h1>
-            <table>
+            <div class="above-table">
+                <div class="table-title">
+                    <h1>Students</h1>
+                </div>
+                <div class="add-student">
+                    <button class="add-btn">
+                        <img src="resources/add.svg">
+                    </button>
+                </div>
+            </div>
+            
+            <table id="student-table">
                 <thead>
                     <tr>
                         <td><input type="checkbox"></th>
@@ -91,8 +102,8 @@
                             <button class="edit-btn">
                                 <img src="resources/edit.svg">
                             </button>
-                            <button class="add-btn">
-                                <img src="resources/add.svg">
+                            <button class="remove-btn">
+                                <img src="resources/remove.svg">
                             </button>
                         </td>
                     </tr>
@@ -109,8 +120,8 @@
                             <button class="edit-btn">
                                 <img src="resources/edit.svg">
                             </button>
-                            <button class="add-btn">
-                                <img src="resources/add.svg">
+                            <button class="remove-btn">
+                                <img src="resources/remove.svg">
                             </button>
                         </td>
                     </tr>
@@ -127,8 +138,8 @@
                             <button class="edit-btn">
                                 <img src="resources/edit.svg">
                             </button>
-                            <button class="add-btn">
-                                <img src="resources/add.svg">
+                            <button class="remove-btn">
+                                <img src="resources/remove.svg">
                             </button>
                         </td>
                     </tr>
@@ -145,8 +156,8 @@
                             <button class="edit-btn">
                                 <img src="resources/edit.svg">
                             </button>
-                            <button class="add-btn">
-                                <img src="resources/add.svg">
+                            <button class="remove-btn">
+                                <img src="resources/remove.svg">
                             </button>
                         </td>
                     </tr>
@@ -163,8 +174,8 @@
                             <button class="edit-btn">
                                 <img src="resources/edit.svg">
                             </button>
-                            <button class="add-btn">
-                                <img src="resources/add.svg">
+                            <button class="remove-btn">
+                                <img src="resources/remove.svg">
                             </button>
                         </td>
                     </tr>
@@ -173,10 +184,8 @@
             </table>
             
         </main>
-    </div>
-    
-    
-    
+    </div>    
+
+    <script src="scripts.js"></script>
 </body>
-<script src="scripts.js"></script>
 </html>

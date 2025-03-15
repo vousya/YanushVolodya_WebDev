@@ -1,28 +1,52 @@
-const addButtons = document.querySelectorAll(".add-btn");
-
-addButtons.forEach(button => {
-    button.addEventListener("click", open_add_window);
+// remove button event listener
+document.querySelectorAll(".remove-btn").forEach(button => {
+    button.addEventListener("click", function() {
+        const row = this.closest("tr");
+        const student_name = row.cells[2].textContent.trim();
+        open_remove_window(student_name);
+    });
 });
 
-function bell_animation(elem) {
-    elem.classList.remove('swinging');
+//add button event listener
+document.getElementById("bell").addEventListener('click', bell_animation);
 
-    void elem.offsetWidth;
+// swinging animation
+function bell_animation(event) {
+    const bell = event.target;
+    
+    bell.classList.remove('swinging');
 
-    elem.classList.add('swinging');
+    void bell.offsetWidth;
+
+    bell.classList.add('swinging');
 }
 
-function open_add_window(){
-    const modal = document.getElementById("add-student");
+// modal window for removing student
+function open_remove_window(student_name){
+    const modal = document.getElementById("remove-student");
 
     modal.style.display = "block";
 
-    const close = document.getElementById("close-add-window");
+    const close = document.getElementById("close-remove-window");
+    const cancel = document.getElementById("cancel-remove-btn");
+    const remove = document.getElementById("action-remove-btn");
 
-    close.addEventListener("click", close_add_window)
+    close.addEventListener("click", close_remove_window);
+    cancel.addEventListener("click", close_remove_window);
+    remove.addEventListener("click", remove_student);
+    
+    document.getElementById("remove-text").textContent = "Are you " +
+    "sure you want to delete " + student_name + "?"
+    console.log(student_name)
 }
 
-function close_add_window() {
-    const modal = document.getElementById("add-student");
+//close modal window for removing student
+function close_remove_window() {
+    const modal = document.getElementById("remove-student");
     modal.style.display = "none";
+}
+
+//removing student
+function remove_student(){
+    //todo
 }
