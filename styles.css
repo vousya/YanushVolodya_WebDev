@@ -89,7 +89,7 @@ td img{
     top: 50%;
     left: 50%;
     width: 400px;
-    height: 400px;
+    height: 500px;
     padding: 20px;
     background: white;
     transform: translate(-50%, -50%);
@@ -120,7 +120,7 @@ td img{
 }
 
 /* Content area - Centers text vertically */
-.content {
+.content-remove {
     flex: 1; /* Takes up remaining space */
     display: flex;
     align-items: center;
@@ -154,3 +154,64 @@ td img{
     color: white;
 }
 
+
+
+
+
+
+
+
+.content-add {
+    padding: 20px;
+}
+
+.content-add label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 18px;
+    color: #333;
+}
+
+/* Input and select styling */
+.content-add input,
+.content-add select {
+    width: 100%;
+    padding: 8px 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+}
+
+
+
+
+
+
+
+
+
+.cancel-btn, .action-btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.cancel-btn {
+    background: #ccc;
+    color: black;
+}
+
+.action-btn {
+    background: #28a745;
+    color: white;
+}
+
+.cancel-btn:hover, .action-btn:hover {
+    opacity: 0.8;
+}

@@ -7,6 +7,26 @@ document.querySelectorAll(".remove-btn").forEach(button => {
     });
 });
 
+document.getElementById("add-button").addEventListener("click", open_add_window);
+
+function open_add_window(){
+    const modal = document.getElementById("add-student");
+
+    modal.style.display = "block";
+
+    const close = document.getElementById("close-add-window");
+    const cancel = document.getElementById("cancel-add-btn");
+    const add = document.getElementById("action-add-btn");
+
+    close.addEventListener("click", close_add_window);
+    cancel.addEventListener("click", close_add_window);
+}
+
+function close_add_window() {
+    const modal = document.getElementById("add-student");
+    modal.style.display = "none";
+}
+
 const main_checkbox = document.getElementById("main-checkbox");
 main_checkbox.addEventListener("click", function(){
     let is_checked = this.checked;

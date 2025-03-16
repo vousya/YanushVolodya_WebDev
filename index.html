@@ -48,18 +48,57 @@
             </ul>
         </aside>
 
-        <div id="remove-student" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span>Warning</span>
-                    <span id="close-remove-window" class="close">&times;</span>
+        <div>
+            <div id="remove-student" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span>Warning</span>
+                        <span id="close-remove-window" class="close">&times;</span>
+                    </div>
+                    <div class="content-remove">
+                        <span id="remove-text"></span>
+                    </div>
+                    <div class="choice">
+                        <button id="cancel-remove-btn" class="cancel-btn">Cancel</button>
+                        <button id="action-remove-btn" class="action-btn">OK</button>
+                    </div>
                 </div>
-                <div class="content">
-                    <span id="remove-text"></span>
-                </div>
-                <div class="choice">
-                    <button id="cancel-remove-btn">Cancel</button>
-                    <button id="action-remove-btn">OK</button>
+            </div>
+    
+            <div id="add-student" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span>Add Student</span>
+                        <span id="close-add-window" class="close">&times;</span>
+                    </div>
+                    <div class="content-add">
+                        <label for="group">Group:</label>
+                        <select id="group" name="group">
+                            <option value="group1">PZ-12</option>
+                            <option value="group2">PZ-22</option>
+                            <option value="group3">PZ-25</option>
+                            <option value="group4">PZ-81</option>
+                            <option value="group5">IR-22</option>
+                        </select>
+
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" required>
+
+                        <label for="gender">Gender:</label>
+                        <select id="gender" name="gender">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+
+                        <label for="dob">Birthday:</label>
+                        <input type="date" id="dob" name="dob">
+                        <br><br>
+
+                    </div>
+                    <div class="choice">
+                        <button id="cancel-add-btn" class="cancel-btn">Cancel</button>
+                        <button id="action-add-btn" class="action-btn">OK</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -69,7 +108,7 @@
                 <div class="table-title">
                     <h1>Students</h1>
                 </div>
-                <div class="add-student">
+                <div id="add-button" class="add-student">
                     <button class="add-btn">
                         <img src="resources/add.svg">
                     </button>
