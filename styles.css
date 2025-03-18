@@ -2,6 +2,9 @@
     box-sizing: border-box;
 }
 
+h1 {
+    font-size: clamp(18px, 2.25vw, 42px);
+}
 
 body {
     
@@ -9,7 +12,7 @@ body {
     height: max-content;
     margin: 0;
     padding: 0;
-    /*overflow: hidden;*/
+    overflow: hidden;
 }
 
 .page {
@@ -36,7 +39,7 @@ table {
 
 table th, td {
     text-align: center;
-    font-size: 28px;
+    font-size: clamp(12px, 1.5vw, 28px);
     border: 1px solid black;
     min-width: 0;
 }
@@ -83,36 +86,32 @@ td img{
     display: none;
 }
 
-/* Centered modal content */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: clamp(10px, 2vw, 20px);
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+}
+
 .modal-content {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 400px;
-    height: 500px;
-    padding: 20px;
+    top: 10%;
+    left: 35%;
+    width: clamp(200px, 30vw, 600px);
+    height: auto;
+    min-height: 40vh;
+    padding: clamp(10px, 2vw, 30px);
     background: white;
-    transform: translate(-50%, -50%);
     text-align: center;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Pushes elements apart */
+    justify-content: space-around;
 }
 
-/* Modal header */
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 20px;
-    font-weight: bold;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #ccc;
-}
-
-/* Close button */
 .close {
     font-size: 24px;
     cursor: pointer;
@@ -125,7 +124,7 @@ td img{
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: clamp(18px, 3vw, 24px)
 }
 
 /* Buttons at the bottom */
@@ -162,33 +161,32 @@ td img{
 
 
 .content-add {
-    padding: 20px;
+    padding: clamp(10px, 2vw, 30px);
 }
 
 .content-add label {
     display: block;
     margin-bottom: 5px;
-    font-size: 18px;
+    font-size: clamp(14px, 3vw, 32px);
     color: #333;
 }
 
-/* Input and select styling */
 .content-add input,
 .content-add select {
     width: 100%;
-    padding: 8px 12px;
-    margin-bottom: 15px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: clamp(10px, 2vw, 18px);
     box-sizing: border-box;
     background-color: #fff;
     transition: border-color 0.3s ease;
+    margin-bottom: clamp(15px, 2.3vw, 30px);
 }
 
 
-
-
+#date {
+    margin-bottom: 0px;
+}
 
 
 
@@ -199,7 +197,7 @@ td img{
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: clamp(12px, 2vw, 20px);
 }
 
 .cancel-btn {
@@ -214,4 +212,14 @@ td img{
 
 .cancel-btn:hover, .action-btn:hover {
     opacity: 0.8;
+}
+
+
+.status {
+    width: clamp(20px, min(3vw, 3vh), 30px);
+    height: auto;
+}
+
+.add-btn img {
+    width: clamp(30px, 5vw, 50px);
 }

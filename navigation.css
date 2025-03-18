@@ -1,10 +1,11 @@
 .navigation {    
-    min-width: 150px;
-    max-width: 250px;
+    width: clamp(100px, 4vw, 200px);
+    max-width: 200px;
     flex: 1;
     background-color: antiquewhite;
     padding: 10px;
     justify-items: left;
+    height: 100vh;
 }
 
 .navigation ul {
@@ -14,11 +15,11 @@
 
 .navigation a {
     text-decoration: none;
-    color: black
+    color: black;
+    font-size: clamp(16px, 3vw, 32px);
 }
 
 .navigation nav {
-    font-size: 24px;
     padding: 10px;
     transition: all 0.3s ease-in-out;
 }
@@ -29,13 +30,7 @@
     color: #0032d4;
 }
 
-@keyframes bounce {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(15px); }
-}
-
 .active-page {
-    background-color: rgba(0, 0, 255, 0.137);
-    font-size: 32px;
-    padding: 0 0 0 20px;
+    padding: 0 0 0 10px;
+    font-weight: bold;
 }

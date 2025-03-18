@@ -18,17 +18,26 @@
         </div>
 
         <div class="right-menu">
-            <div id="bell">
+            <div id="bell" class="bell">
                 <button class="bell-btn">
                     <img src="resources/bell.svg" width="50" height="50">
                 </button>
             </div>
+            <div id="bell-messages" class="messages">
+                <p>No new messages</p>
+                <p>Meeting at 3 PM</p>
+                <p>System update available</p>
+            </div>
 
-            <div class="profile">
+            <div id="profile" class="profile">
                 <button class="profile-btn">
                     <img src="resources/profile.svg" width="50" height="50">
-                <span class="profile-text">Vovus Pokus</span>
+                    <span class="profile-text">Vovus Pokus</span>
                 </button>
+            </div>
+            <div id="profile-options" class="profile-options">
+                <p>Profile</p>
+                <p>Log out</p>
             </div>
         </div>
 
@@ -74,11 +83,11 @@
                     <div class="content-add">
                         <label for="group">Group:</label>
                         <select id="group" name="group">
-                            <option value="group1">PZ-12</option>
-                            <option value="group2">PZ-22</option>
-                            <option value="group3">PZ-25</option>
-                            <option value="group4">PZ-81</option>
-                            <option value="group5">IR-22</option>
+                            <option value="PZ-12">PZ-12</option>
+                            <option value="PZ-22">PZ-22</option>
+                            <option value="PZ-25">PZ-25</option>
+                            <option value="PZ-81">PZ-81</option>
+                            <option value="IR-22">IR-22</option>
                         </select>
 
                         <label for="name">Name:</label>
@@ -86,12 +95,12 @@
 
                         <label for="gender">Gender:</label>
                         <select id="gender" name="gender">
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
                         </select>
 
-                        <label for="dob">Birthday:</label>
-                        <input type="date" id="dob" name="dob">
+                        <label for="date">Birthday:</label>
+                        <input type="date" id="date" name="date">
                         <br><br>
 
                     </div>
@@ -135,7 +144,7 @@
                         <td>M</td>
                         <td>12.12.2003</td>
                         <td>
-                            <img src="resources/status-inactive.svg">
+                            <img class="status" src="resources/status-inactive.svg">
                         </td>
                         <td>
                             <button class="edit-btn">
@@ -153,7 +162,7 @@
                         <td>M</td>
                         <td>13.01.2005</td>
                         <td>
-                            <img src="resources/status-inactive.svg">
+                            <img class="status" src="resources/status-inactive.svg">
                         </td>
                         <td>
                             <button class="edit-btn">
@@ -171,7 +180,7 @@
                         <td>F</td>
                         <td>31.08.2015</td>
                         <td>
-                            <img src="resources/status-active.svg">
+                            <img class="status" src="resources/status-active.svg">
                         </td>
                         <td>
                             <button class="edit-btn">
@@ -189,7 +198,7 @@
                         <td>F</td>
                         <td>8.01.2005</td>
                         <td>
-                            <img src="resources/status-inactive.svg">
+                            <img class="status" src="resources/status-inactive.svg">
                         </td>
                         <td>
                             <button class="edit-btn">
@@ -207,7 +216,7 @@
                         <td>M</td>
                         <td>11.01.2000</td>
                         <td>
-                            <img src="resources/status-inactive.svg">
+                            <img class="status" src="resources/status-inactive.svg">
                         </td>
                         <td>
                             <button class="edit-btn">

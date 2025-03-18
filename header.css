@@ -2,7 +2,7 @@
 header {
     display: flex;
     background-color: pink;
-    height: 75px;
+    height: clamp(50px, 8vw, 75px);
     width: 100%;
     flex-direction: row;
     justify-content: space-between;
@@ -44,6 +44,68 @@ header {
 }
 
 .profile-text {
-    font-size: 24px;
+    font-size: clamp(15px, 2vw, 24px);
     margin-left: 10px;
+}
+
+img {
+    width: clamp(30px, 5vw, 50px);
+    height: auto; 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+#bell-messages {
+    position: absolute;
+    top: 60px; /* Position below the bell */
+    right: 15%; /* Align with the bell */
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 220px;
+    border-radius: 5px;
+    display: none;
+    z-index: 1000;
+}
+
+#bell-messages p {
+    margin: 5px 0;
+    padding: 8px;
+    font-size: 14px;
+    border-bottom: 1px solid #ddd;
+    cursor: default; 
+}
+
+
+
+#profile-options {
+    position: absolute;
+    top: 60px;
+    right: 0%;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 220px;
+    border-radius: 5px;
+    display: none;
+    z-index: 1000;
+}
+
+#profile-options p {
+    margin: 5px 0;
+    padding: 8px;
+    font-size: 14px;
+    border-bottom: 1px solid #ddd;
+    cursor: default; 
 }
