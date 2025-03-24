@@ -11,10 +11,13 @@
 </head>
 <body>
     <header>
-        <div class="home">
-            <a href="index.html">
-                <img src="resources/home.svg" width="50" height="50">
-            </a>
+        <div class="left-menu">
+            <div id="burger" class="burger">☰</div>
+            <div class="home">
+                <a href="index.html">
+                    <img src="resources/home.svg" width="50" height="50">
+                </a>
+            </div>
         </div>
 
         <div class="right-menu">
@@ -42,21 +45,155 @@
         </div>
 
     </header>
+    
     <div class="page">
-        <aside class="navigation">
-            <ul>
-                <nav>
-                    <a href="dashboard.html">Dashboard</a>
-                </nav>
-                <nav>
-                    <a href="index.html" class="active-page">Students</a>
-                </nav>
-                <nav>
-                    <a href="tasks.html">Tasks</a>
-                </nav>
-            </ul>
+
+        <aside id="navigation" class="navigation">
+            <nav>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="index.html" class="active-page">Students</a></li>
+                    <li><a href="tasks.html">Tasks</a></li>
+                </ul>
+            </nav>
         </aside>
 
+        <main>
+            <div class="above-table">
+                <div class="table-title">
+                    <h1>Students</h1>
+                </div>
+                <div id="add-button" class="add-student">
+                    <button class="add-btn">
+                        +
+                    </button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table id="student-table">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="main-checkbox"></th>
+                            <th>Group</th>
+                            <th>Name</th>
+                            <th>Gender</th>
+                            <th>Birthday</th>
+                            <th>Status</th>
+                            <th>Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="checkbox" class="checkbox"></td>                
+                            <td>PZ-22</td>
+                            <td>
+                                <span class="full-name">Kamala Bogdan</span>
+                                <span class="initials">K B</span>
+                            </td>
+                            <td>M</td>
+                            <td>12.12.2003</td>
+                            <td>
+                                <img class="status" src="resources/status-inactive.svg">
+                            </td>
+                            <td>
+                                <button class="edit-btn">
+                                    <img src="resources/edit.svg">
+                                </button>
+                                <button class="remove-btn">
+                                    <img src="resources/remove.svg">
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="checkbox"></td>                
+                            <td>PZ-12</td>
+                            <td>
+                                <span class="full-name">Rizz Master</span>
+                                <span class="initials">R M</span>
+                            </td>
+                            <td>M</td>
+                            <td>13.01.2005</td>
+                            <td>
+                                <img class="status" src="resources/status-inactive.svg">
+                            </td>
+                            <td>
+                                <button class="edit-btn">
+                                    <img src="resources/edit.svg">
+                                </button>
+                                <button class="remove-btn">
+                                    <img src="resources/remove.svg">
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><input type="checkbox" class="checkbox"></th>                
+                            <td>IR-22</td>
+                            <td>
+                                <span class="full-name">Sigma Kid</span>
+                                <span class="initials">S K</span>
+                            </td>
+                            <td>F</td>
+                            <td>31.08.2015</td>
+                            <td>
+                                <img class="status" src="resources/status-active.svg">
+                            </td>
+                            <td>
+                                <button class="edit-btn">
+                                    <img src="resources/edit.svg">
+                                </button>
+                                <button class="remove-btn">
+                                    <img src="resources/remove.svg">
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><input type="checkbox" class="checkbox"></th>                
+                            <td>PZ-25</td>
+                            <td>
+                                <span class="full-name">Yarich Ira</span>
+                                <span class="initials">Y I</span>
+                            </td>
+                            <td>F</td>
+                            <td>8.01.2005</td>
+                            <td>
+                                <img class="status" src="resources/status-inactive.svg">
+                            </td>
+                            <td>
+                                <button class="edit-btn">
+                                    <img src="resources/edit.svg">
+                                </button>
+                                <button class="remove-btn">
+                                    <img src="resources/remove.svg">
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><input type="checkbox" class="checkbox"></th>                
+                            <td>PZ-81</td>
+                            <td>
+                                <span class="full-name">Pilko Dmytro</span>
+                                <span class="initials">P D</span>
+                            </td>
+                            <td>M</td>
+                            <td>11.01.2000</td>
+                            <td>
+                                <img class="status" src="resources/status-inactive.svg">
+                            </td>
+                            <td>
+                                <button class="edit-btn">
+                                    <img src="resources/edit.svg">
+                                </button>
+                                <button class="remove-btn">
+                                    <img src="resources/remove.svg">
+                                </button>
+                            </td>
+                        </tr>
+    
+                    </tbody>
+                </table>
+            </div>
+            
+        </main>
         <div>
             <div id="remove-student" class="modal">
                 <div class="modal-content">
@@ -73,7 +210,7 @@
                     </div>
                 </div>
             </div>
-    
+        
             <div id="add-student" class="modal">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -89,20 +226,20 @@
                             <option value="PZ-81">PZ-81</option>
                             <option value="IR-22">IR-22</option>
                         </select>
-
+        
                         <label for="name">Name:</label>
                         <input type="text" id="name" name="name" required>
-
+        
                         <label for="gender">Gender:</label>
                         <select id="gender" name="gender">
                             <option value="M">Male</option>
                             <option value="F">Female</option>
                         </select>
-
+        
                         <label for="date">Birthday:</label>
                         <input type="date" id="date" name="date">
                         <br><br>
-
+        
                     </div>
                     <div class="choice">
                         <button id="cancel-add-btn" class="cancel-btn">Cancel</button>
@@ -111,127 +248,6 @@
                 </div>
             </div>
         </div>
-
-        <main>
-            <div class="above-table">
-                <div class="table-title">
-                    <h1>Students</h1>
-                </div>
-                <div id="add-button" class="add-student">
-                    <button class="add-btn">
-                        <img src="resources/add.svg">
-                    </button>
-                </div>
-            </div>
-            
-            <table id="student-table">
-                <thead>
-                    <tr>
-                        <td><input type="checkbox" id="main-checkbox"></th>
-                            <th>Group</th>
-                            <th>Name</th>
-                        <th>Gender</th>
-                        <th>Birthday</th>
-                        <th>Status</th>
-                        <th>Options</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><input type="checkbox" class="checkbox"></td>                
-                        <td>PZ-22</td>
-                        <td>Kamala Bogdan</td>
-                        <td>M</td>
-                        <td>12.12.2003</td>
-                        <td>
-                            <img class="status" src="resources/status-inactive.svg">
-                        </td>
-                        <td>
-                            <button class="edit-btn">
-                                <img src="resources/edit.svg">
-                            </button>
-                            <button class="remove-btn">
-                                <img src="resources/remove.svg">
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox" class="checkbox"></td>                
-                        <td>PZ-12</td>
-                        <td>Rizz Master</td>
-                        <td>M</td>
-                        <td>13.01.2005</td>
-                        <td>
-                            <img class="status" src="resources/status-inactive.svg">
-                        </td>
-                        <td>
-                            <button class="edit-btn">
-                                <img src="resources/edit.svg">
-                            </button>
-                            <button class="remove-btn">
-                                <img src="resources/remove.svg">
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th><input type="checkbox" class="checkbox"></th>                
-                        <td>IR-22</td>
-                        <td>Sigma Kid</td>
-                        <td>F</td>
-                        <td>31.08.2015</td>
-                        <td>
-                            <img class="status" src="resources/status-active.svg">
-                        </td>
-                        <td>
-                            <button class="edit-btn">
-                                <img src="resources/edit.svg">
-                            </button>
-                            <button class="remove-btn">
-                                <img src="resources/remove.svg">
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th><input type="checkbox" class="checkbox"></th>                
-                        <td>PZ-25</td>
-                        <td>Yarich Ira</td>
-                        <td>F</td>
-                        <td>8.01.2005</td>
-                        <td>
-                            <img class="status" src="resources/status-inactive.svg">
-                        </td>
-                        <td>
-                            <button class="edit-btn">
-                                <img src="resources/edit.svg">
-                            </button>
-                            <button class="remove-btn">
-                                <img src="resources/remove.svg">
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th><input type="checkbox" class="checkbox"></th>                
-                        <td>PZ-81</td>
-                        <td>Pilko Dmytro</td>
-                        <td>M</td>
-                        <td>11.01.2000</td>
-                        <td>
-                            <img class="status" src="resources/status-inactive.svg">
-                        </td>
-                        <td>
-                            <button class="edit-btn">
-                                <img src="resources/edit.svg">
-                            </button>
-                            <button class="remove-btn">
-                                <img src="resources/remove.svg">
-                            </button>
-                        </td>
-                    </tr>
-
-                </tbody>
-            </table>
-            
-        </main>
     </div>    
 
     <script src="scripts.js"></script>

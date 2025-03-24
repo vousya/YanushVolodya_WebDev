@@ -7,9 +7,6 @@ h1 {
 }
 
 body {
-    
-    width: max-content;
-    height: max-content;
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -17,24 +14,31 @@ body {
 
 .page {
     display: flex;
-    min-width: 100vw;
-    width: max-content;
+    width: 100%;
     min-height: 100vh;
     height: 100%;
 }
 
 main {
-    padding: 0px 20px 0px 20px;
-    flex: 5;
+    /* padding: 0px 20px 0px 20px; */
+    /* flex: 5; */
+    width: 100%;
     justify-items: center;
 }
 
+.table-container {
+    width: 95%;
+    overflow-x: auto;
+}
+
+
 table {
+    table-layout: auto;
     border-collapse: collapse;
     border: 1px solid black;
     background-color: white;
-    min-width: 0;
-    width: 95%;
+    min-width: 600px; /* Ensure the table is wide enough to need scrolling */
+    width: 100%; /* Remove the 95% width to allow natural width */
 }
 
 table th, td {
@@ -53,6 +57,7 @@ td button{
 }
 
 .above-table {
+    height: clamp(50px, 8vw, 125px);
     width: 95%;
     display: flex;
     justify-content: space-between;
@@ -60,14 +65,13 @@ td button{
 }
 
 .add-btn {
+    position: absolute;
+    top: clamp(60px, 10vw, 100px);
+    right: 2.5vw;
     border: none;
+    padding: 0px;
+    font-size: clamp(32px, 4vw, 72px);
     background-color: white;
-}
-
-.add-btn img {
-    float:right;
-    width: 50px;
-    height: 50px;
 }
 
 td img{
@@ -220,6 +224,39 @@ td img{
     height: auto;
 }
 
-.add-btn img {
-    width: clamp(30px, 5vw, 50px);
+
+.initials {
+    display: none;
 }
+
+.burger-menu {
+    display: none;
+}
+
+@media (max-width: 505px) {
+    .full-name {
+      display: none;
+    }
+  
+    .initials {
+      display: inline;
+    }
+
+    .profile-text {
+        display: none;
+    }
+  }
+  
+@media (min-width: 506px) {
+   .full-name {
+        display: inline;
+    }
+  
+    .initials {
+      display: none;
+    }
+
+    .profile-text {
+        display: inline;
+    }
+  }

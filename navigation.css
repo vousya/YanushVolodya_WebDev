@@ -1,11 +1,17 @@
-.navigation {    
-    width: clamp(100px, 4vw, 200px);
+.navigation {   
+    display: none; 
+    width: clamp(100px, 15vw, 300px);
     max-width: 200px;
-    flex: 1;
     background-color: antiquewhite;
     padding: 10px;
     justify-items: left;
     height: 100vh;
+    z-index: 1;
+    position: fixed;
+}
+
+nav ul {
+    list-style: none;
 }
 
 .navigation ul {
@@ -16,7 +22,7 @@
 .navigation a {
     text-decoration: none;
     color: black;
-    font-size: clamp(16px, 3vw, 32px);
+    font-size: clamp(16px, 2.5vw, 32px);
 }
 
 .navigation nav {

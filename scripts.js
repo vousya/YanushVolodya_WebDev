@@ -1,4 +1,3 @@
-
 document.getElementById("add-button").addEventListener("click", open_add_window);
 
 function open_add_window(){
@@ -24,14 +23,16 @@ function add_row() {
     let table = document.getElementById("student-table").getElementsByTagName('tbody')[0];
 
     let group = document.getElementById("group").value;
-    let name = document.getElementById("name").value;
+    let full_name = document.getElementById("name").value;
     let gender = document.getElementById("gender").value;
     let date = document.getElementById("date").value;
 
-    if (name.trim() === "" || date === "") {
+    if (full_name.trim() === "" || date === "") {
         alert("Please fill in all required fields.");
         return;
     }
+
+    let initials = full_name.split(" ").map(word => word[0]).join(" ").toUpperCase();
 
     let parts = date.split("-");
     let normal_date = parts[2] + "." + parts[1] + "." + parts[0];
@@ -41,7 +42,10 @@ function add_row() {
     new_row.innerHTML = `
     <td><input type="checkbox" class="checkbox"></td>
     <td>${group}</td>
-    <td>${name}</td>
+    <td>
+        <span class="full-name">${full_name}</span>
+        <span class="initials">${initials}</span>
+    </td>
     <td>${gender}</td>
     <td>${normal_date}</td>
     <td>
@@ -214,3 +218,27 @@ profile.addEventListener("mouseleave", function () {
 options.addEventListener("mouseleave", function () {
     hideTimeout = setTimeout(() => options.style.display = "none", 300);
 });
+
+
+
+
+
+
+
+
+
+
+let burger = document.getElementById("burger");
+burger.addEventListener("click", toggleMenu);
+
+function toggleMenu() {
+    let navigation = document.getElementById('navigation');
+    if (burger.textContent == "☰"){
+        navigation.style.display = "block";
+        burger.textContent = "✖";
+    }
+    else {
+        navigation.style.display = "none";
+        burger.textContent = "☰";
+    }
+}
