@@ -231,7 +231,7 @@
                     </div>
                     <div class="content-add">
                         <label for="group">Group:</label>
-                        <select id="group" name="group">
+                        <select id="group-add" name="group">
                             <option value="PZ-12">PZ-12</option>
                             <option value="PZ-22">PZ-22</option>
                             <option value="PZ-25">PZ-25</option>
@@ -240,21 +240,57 @@
                         </select>
         
                         <label for="name">Name:</label>
-                        <input type="text" id="name" name="name" required>
+                        <input type="text" id="name-add" name="name" required>
         
                         <label for="gender">Gender:</label>
-                        <select id="gender" name="gender">
+                        <select id="gender-add" name="gender">
                             <option value="M">Male</option>
                             <option value="F">Female</option>
                         </select>
         
                         <label for="date">Birthday:</label>
-                        <input type="date" id="date" name="date">
+                        <input type="date" id="date-add" name="date">
                         <br><br>
                     </div>
                     <div class="choice">
                         <button id="cancel-add-btn" class="cancel-btn">Cancel</button>
                         <button id="action-add-btn" class="action-btn">OK</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="edit-student" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span>Add Student</span>
+                        <span id="close-edit-window" class="close">×</span>
+                    </div>
+                    <div class="content-edit">
+                        <label for="group">Group:</label>
+                        <select id="group-edit" name="group">
+                            <option value="PZ-12">PZ-12</option>
+                            <option value="PZ-22">PZ-22</option>
+                            <option value="PZ-25">PZ-25</option>
+                            <option value="PZ-81">PZ-81</option>
+                            <option value="IR-22">IR-22</option>
+                        </select>
+        
+                        <label for="name">Name:</label>
+                        <input type="text" id="name-edit" name="name" required>
+        
+                        <label for="gender">Gender:</label>
+                        <select id="gender-edit" name="gender">
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
+                        </select>
+        
+                        <label for="date">Birthday:</label>
+                        <input type="date" id="date-edit" name="date">
+                        <br><br>
+                    </div>
+                    <div class="choice">
+                        <button id="cancel-edit-btn" class="cancel-btn">Cancel</button>
+                        <button id="action-edit-btn" class="action-btn">OK</button>
                     </div>
                 </div>
             </div>

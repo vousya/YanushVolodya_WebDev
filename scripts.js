@@ -25,10 +25,10 @@ function close_add_window() {
 function add_row() {
     let table = document.getElementById("student-table").getElementsByTagName('tbody')[0];
 
-    let group = document.getElementById("group").value;
-    let full_name = document.getElementById("name").value;
-    let gender = document.getElementById("gender").value;
-    let date = document.getElementById("date").value;
+    let group = document.getElementById("group-add").value;
+    let full_name = document.getElementById("name-add").value;
+    let gender = document.getElementById("gender-add").value;
+    let date = document.getElementById("date-add").value;
 
     if (full_name.trim() === "" || date === "") {
         alert("Please fill in all required fields.");
@@ -73,8 +73,8 @@ function add_row() {
         }
     });
 
-    document.getElementById("name").value = "";
-    document.getElementById("date").value = "";
+    document.getElementById("name-add").value = "";
+    document.getElementById("date-add").value = "";
     close_add_window();
 
     update_main_checkbox();
@@ -85,6 +85,7 @@ document.querySelectorAll(".remove-btn").forEach(button => {
         const row = this.closest("tr");
         const student_name = row.cells[2].textContent.trim();
         if(row.cells[0].querySelector("input").checked){
+            console.log("Removing row:", row);
             open_remove_window(row, student_name);
         }
     });
@@ -114,25 +115,27 @@ function open_remove_window(row, student_name){
         const table = document.getElementById("student-table");
         const rowIndex = row.rowIndex;
         table.deleteRow(rowIndex);
-        close_remove_window();
+        let modal = document.getElementById("remove-student");
+        modal.style.display = "none";
 
         remove.removeEventListener("click", remove_student);
     };
 
-    close.addEventListener("click", close_remove_window);
-    cancel.addEventListener("click", close_remove_window);
     remove.addEventListener("click", remove_student);
+    close.addEventListener("click", function(){
+        remove.removeEventListener("click", remove_student);
+        let modal = document.getElementById("remove-student");
+        modal.style.display = "none";
+    });
+    cancel.addEventListener("click", function(){
+        remove.removeEventListener("click", remove_student);
+        let modal = document.getElementById("remove-student");
+        modal.style.display = "none";
+    });
     
     document.getElementById("remove-text").textContent = "Are you " +
     "sure you want to delete " + name + "?"
 }
-
-function close_remove_window() {
-    const modal = document.getElementById("remove-student");
-    modal.style.display = "none";
-}
-
-
 
 const main_checkbox = document.getElementById("main-checkbox");
 if (main_checkbox){
