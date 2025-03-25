@@ -68,7 +68,9 @@ function add_row() {
     new_row.cells[6].querySelector(".remove-btn").addEventListener("click", function() {
         const row = this.closest("tr");
         const student_name = row.cells[2].textContent.trim();
-        open_remove_window(row, student_name);
+        if(row.cells[0].querySelector("input").checked){
+            open_remove_window(row, student_name);
+        }
     });
 
     document.getElementById("name").value = "";
