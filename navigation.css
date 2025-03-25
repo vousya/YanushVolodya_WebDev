@@ -1,7 +1,6 @@
-.navigation {   
-    display: none; 
-    width: clamp(100px, 15vw, 300px);
-    max-width: 200px;
+.navigation {
+    display: none;
+    width: clamp(150px, 20vw, 300px);
     background-color: antiquewhite;
     padding: 10px;
     justify-items: left;
@@ -10,11 +9,8 @@
     position: fixed;
 }
 
-nav ul {
+.navigation nav ul {
     list-style: none;
-}
-
-.navigation ul {
     padding: 0px;
     margin: 0px;
 }
@@ -23,17 +19,15 @@ nav ul {
     text-decoration: none;
     color: black;
     font-size: clamp(16px, 2.5vw, 32px);
+    display: block; /* Ensures the entire area is clickable */
+    padding: 10px; /* Moved from .navigation nav for consistent spacing */
+    transition: all 0.3s ease-in-out; /* Moved hover transition to the link */
 }
 
-.navigation nav {
-    padding: 10px;
-    transition: all 0.3s ease-in-out;
-}
-
-.navigation nav:hover {
-    transform: translateX(10px);
-    background-color: #f0f0f0de; 
-    color: #0032d4;
+.navigation a:hover {
+    transform: translateX(10px); /* Moved from .navigation nav:hover */
+    background-color: #f0f0f0de; /* Moved from .navigation nav:hover */
+    color: #0032d4; /* Moved from .navigation nav:hover */
 }
 
 .active-page {

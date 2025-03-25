@@ -1,4 +1,7 @@
-document.getElementById("add-button").addEventListener("click", open_add_window);
+const add_btn = document.getElementById("add-button");
+if (add_btn){
+    add_btn.addEventListener("click", open_add_window);
+}
 
 function open_add_window(){
     const modal = document.getElementById("add-student");
@@ -79,12 +82,16 @@ document.querySelectorAll(".remove-btn").forEach(button => {
     button.addEventListener("click", function() {
         const row = this.closest("tr");
         const student_name = row.cells[2].textContent.trim();
-        open_remove_window(row, student_name);
+        if(row.cells[0].querySelector("input").checked){
+            open_remove_window(row, student_name);
+        }
     });
 });
 
 function open_remove_window(row, student_name){
     const modal = document.getElementById("remove-student");
+
+    let name = student_name.slice(0, -4);
 
     modal.style.display = "block";
 
@@ -115,8 +122,7 @@ function open_remove_window(row, student_name){
     remove.addEventListener("click", remove_student);
     
     document.getElementById("remove-text").textContent = "Are you " +
-    "sure you want to delete " + student_name + "?"
-    console.log(student_name)
+    "sure you want to delete " + name + "?"
 }
 
 function close_remove_window() {
@@ -127,12 +133,14 @@ function close_remove_window() {
 
 
 const main_checkbox = document.getElementById("main-checkbox");
-main_checkbox.addEventListener("click", function(){
-    let is_checked = this.checked;
-    document.querySelectorAll('#student-table input[type="checkbox"]').forEach(checkbox => {
-        checkbox.checked = is_checked;
-    });
-})
+if (main_checkbox){
+    main_checkbox.addEventListener("click", function(){
+        let is_checked = this.checked;
+        document.querySelectorAll('#student-table input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = is_checked;
+        });
+    })
+}
 
 function update_main_checkbox() {
     const all_checkboxes = document.getElementsByClassName("checkbox");
@@ -143,8 +151,6 @@ function update_main_checkbox() {
 document.querySelectorAll('#student-table input[type="checkbox"]').forEach(checkbox => {
     checkbox.addEventListener('change', update_main_checkbox);
 });
-
-
 
 document.getElementById("bell").addEventListener('click', bell_animation);
 

@@ -6,8 +6,8 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
     <link rel="stylesheet" type="text/css" href="header.css">
     <link rel="stylesheet" type="text/css" href="navigation.css">
-    
     <title>Students</title>
+
 </head>
 <body>
     <header>
@@ -15,7 +15,7 @@
             <div id="burger" class="burger">☰</div>
             <div class="home">
                 <a href="index.html">
-                    <img src="resources/home.svg" width="50" height="50">
+                    <img src="resources/home.svg" alt="home" width="50" height="50">
                 </a>
             </div>
         </div>
@@ -23,7 +23,7 @@
         <div class="right-menu">
             <div id="bell" class="bell">
                 <button class="bell-btn">
-                    <img src="resources/bell.svg" width="50" height="50">
+                    <img src="resources/bell.svg" alt="bell" width="50" height="50">
                 </button>
             </div>
             <div id="bell-messages" class="messages">
@@ -34,7 +34,7 @@
 
             <div id="profile" class="profile">
                 <button class="profile-btn">
-                    <img src="resources/profile.svg" width="50" height="50">
+                    <img src="resources/profile.svg" alt="profile" width="50" height="50">
                     <span class="profile-text">Vovus Pokus</span>
                 </button>
             </div>
@@ -43,11 +43,9 @@
                 <p>Log out</p>
             </div>
         </div>
-
     </header>
     
     <div class="page">
-
         <aside id="navigation" class="navigation">
             <nav>
                 <ul>
@@ -64,16 +62,17 @@
                     <h1>Students</h1>
                 </div>
                 <div id="add-button" class="add-student">
-                    <button class="add-btn">
-                        +
-                    </button>
+                    <button class="add-btn">+</button>
                 </div>
             </div>
             <div class="table-container">
                 <table id="student-table">
                     <thead>
                         <tr>
-                            <th><input type="checkbox" id="main-checkbox"></th>
+                            <th>
+                                <label for="main-checkbox" class="visually-hidden">Select all students</label>
+                                <input type="checkbox" id="main-checkbox">
+                            </th>
                             <th>Group</th>
                             <th>Name</th>
                             <th>Gender</th>
@@ -84,7 +83,10 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><input type="checkbox" class="checkbox"></td>                
+                            <td>
+                                <label for="checkbox-1" class="visually-hidden">Select Kamala Bogdan</label>
+                                <input type="checkbox" id="checkbox-1" class="checkbox">
+                            </td>                
                             <td>PZ-22</td>
                             <td>
                                 <span class="full-name">Kamala Bogdan</span>
@@ -93,19 +95,22 @@
                             <td>M</td>
                             <td>12.12.2003</td>
                             <td>
-                                <img class="status" src="resources/status-inactive.svg">
+                                <img class="status" alt="status-inactive" src="resources/status-inactive.svg">
                             </td>
                             <td>
                                 <button class="edit-btn">
-                                    <img src="resources/edit.svg">
+                                    <img src="resources/edit.svg" alt="edit">
                                 </button>
                                 <button class="remove-btn">
-                                    <img src="resources/remove.svg">
+                                    <img src="resources/remove.svg" alt="remove">
                                 </button>
                             </td>
                         </tr>
                         <tr>
-                            <td><input type="checkbox" class="checkbox"></td>                
+                            <td>
+                                <label for="checkbox-2" class="visually-hidden">Select Rizz Master</label>
+                                <input type="checkbox" id="checkbox-2" class="checkbox">
+                            </td>                
                             <td>PZ-12</td>
                             <td>
                                 <span class="full-name">Rizz Master</span>
@@ -114,19 +119,22 @@
                             <td>M</td>
                             <td>13.01.2005</td>
                             <td>
-                                <img class="status" src="resources/status-inactive.svg">
+                                <img class="status" src="resources/status-inactive.svg" alt="status-inactive">
                             </td>
                             <td>
                                 <button class="edit-btn">
-                                    <img src="resources/edit.svg">
+                                    <img src="resources/edit.svg" alt="edit">
                                 </button>
                                 <button class="remove-btn">
-                                    <img src="resources/remove.svg">
+                                    <img src="resources/remove.svg" alt="remove">
                                 </button>
                             </td>
                         </tr>
                         <tr>
-                            <th><input type="checkbox" class="checkbox"></th>                
+                            <td>
+                                <label for="checkbox-3" class="visually-hidden">Select Sigma Kid</label>
+                                <input type="checkbox" id="checkbox-3" class="checkbox">
+                            </td>                
                             <td>IR-22</td>
                             <td>
                                 <span class="full-name">Sigma Kid</span>
@@ -135,19 +143,22 @@
                             <td>F</td>
                             <td>31.08.2015</td>
                             <td>
-                                <img class="status" src="resources/status-active.svg">
+                                <img class="status" alt="status-active" src="resources/status-active.svg">
                             </td>
                             <td>
                                 <button class="edit-btn">
-                                    <img src="resources/edit.svg">
+                                    <img src="resources/edit.svg" alt="edit">
                                 </button>
                                 <button class="remove-btn">
-                                    <img src="resources/remove.svg">
+                                    <img src="resources/remove.svg" alt="remove">
                                 </button>
                             </td>
                         </tr>
                         <tr>
-                            <th><input type="checkbox" class="checkbox"></th>                
+                            <td>
+                                <label for="checkbox-4" class="visually-hidden">Select Yarich Ira</label>
+                                <input type="checkbox" id="checkbox-4" class="checkbox">
+                            </td>                
                             <td>PZ-25</td>
                             <td>
                                 <span class="full-name">Yarich Ira</span>
@@ -156,19 +167,22 @@
                             <td>F</td>
                             <td>8.01.2005</td>
                             <td>
-                                <img class="status" src="resources/status-inactive.svg">
+                                <img class="status" alt="status-inactive" src="resources/status-inactive.svg">
                             </td>
                             <td>
                                 <button class="edit-btn">
-                                    <img src="resources/edit.svg">
+                                    <img src="resources/edit.svg" alt="edit">
                                 </button>
                                 <button class="remove-btn">
-                                    <img src="resources/remove.svg">
+                                    <img src="resources/remove.svg" alt="remove">
                                 </button>
                             </td>
                         </tr>
                         <tr>
-                            <th><input type="checkbox" class="checkbox"></th>                
+                            <td>
+                                <label for="checkbox-5" class="visually-hidden">Select Pilko Dmytro</label>
+                                <input type="checkbox" id="checkbox-5" class="checkbox">
+                            </td>                
                             <td>PZ-81</td>
                             <td>
                                 <span class="full-name">Pilko Dmytro</span>
@@ -177,29 +191,27 @@
                             <td>M</td>
                             <td>11.01.2000</td>
                             <td>
-                                <img class="status" src="resources/status-inactive.svg">
+                                <img class="status" alt="status-inactive" src="resources/status-inactive.svg">
                             </td>
                             <td>
                                 <button class="edit-btn">
-                                    <img src="resources/edit.svg">
+                                    <img src="resources/edit.svg" alt="edit">
                                 </button>
                                 <button class="remove-btn">
-                                    <img src="resources/remove.svg">
+                                    <img src="resources/remove.svg" alt="remove">
                                 </button>
                             </td>
                         </tr>
-    
                     </tbody>
                 </table>
             </div>
-            
         </main>
         <div>
             <div id="remove-student" class="modal">
                 <div class="modal-content">
                     <div class="modal-header">
                         <span>Warning</span>
-                        <span id="close-remove-window" class="close">&times;</span>
+                        <span id="close-remove-window" class="close">×</span>
                     </div>
                     <div class="content-remove">
                         <span id="remove-text"></span>
@@ -215,7 +227,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <span>Add Student</span>
-                        <span id="close-add-window" class="close">&times;</span>
+                        <span id="close-add-window" class="close">×</span>
                     </div>
                     <div class="content-add">
                         <label for="group">Group:</label>
@@ -239,7 +251,6 @@
                         <label for="date">Birthday:</label>
                         <input type="date" id="date" name="date">
                         <br><br>
-        
                     </div>
                     <div class="choice">
                         <button id="cancel-add-btn" class="cancel-btn">Cancel</button>

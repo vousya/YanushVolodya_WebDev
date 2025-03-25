@@ -11,41 +11,49 @@
 </head>
 <body>
     <header>
-        <div class="home">
-            <a href="index.html">
-                <img src="resources/home.svg" width="50" height="50">
-            </a>
+        <div class="left-menu">
+            <div id="burger" class="burger">☰</div>
+            <div class="home">
+                <a href="index.html">
+                    <img src="resources/home.svg" width="50" height="50">
+                </a>
+            </div>
         </div>
-        
+
         <div class="right-menu">
-            <div id="bell">
+            <div id="bell" class="bell">
                 <button class="bell-btn">
                     <img src="resources/bell.svg" width="50" height="50">
                 </button>
             </div>
-            
-            <div class="profile">
+            <div id="bell-messages" class="messages">
+                <p>No new messages</p>
+                <p>Meeting at 3 PM</p>
+                <p>System update available</p>
+            </div>
+
+            <div id="profile" class="profile">
                 <button class="profile-btn">
                     <img src="resources/profile.svg" width="50" height="50">
                     <span class="profile-text">Vovus Pokus</span>
                 </button>
             </div>
+            <div id="profile-options" class="profile-options">
+                <p>Profile</p>
+                <p>Log out</p>
+            </div>
         </div>
-        
+
     </header>
     <div class="page">
-        <aside class="navigation">
-            <ul>
-                <nav>
-                    <a href="dashboard.html">Dashboard</a>
-                </nav>
-                <nav>
-                    <a href="index.html">Students</a>
-                </nav>
-                <nav>
-                    <a href="tasks.html" class="active-page">Tasks</a>
-                </nav>
-            </ul>
+        <aside id="navigation" class="navigation">
+            <nav>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="index.html">Students</a></li>
+                    <li><a href="tasks.html" class="active-page">Tasks</a></li>
+                </ul>
+            </nav>
         </aside>
     </div>
     <script src="scripts.js"></script>

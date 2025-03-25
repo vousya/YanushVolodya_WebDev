@@ -157,12 +157,16 @@ td img{
     color: white;
 }
 
-
-
-
-
-
-
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
 
 .content-add {
     padding: clamp(10px, 2vw, 30px);
@@ -234,6 +238,10 @@ td img{
 }
 
 @media (max-width: 505px) {
+    .modal-content{
+        left: 25%;
+    }
+
     .full-name {
       display: none;
     }
@@ -259,4 +267,10 @@ td img{
     .profile-text {
         display: inline;
     }
-  }
+}
+
+@media (max-width: 325px) {
+    .modal-content{
+        left: 18%;
+    }
+}
