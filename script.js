@@ -4,31 +4,38 @@ if (add_btn){
 }
 
 function open_add_window(){
-    const modal = document.getElementById("add-student");
+    let modal = document.getElementById("add-edit-student");
     
     modal.style.display = "block";
     
-    const close = document.getElementById("close-add-window");
-    const cancel = document.getElementById("cancel-add-btn");
-    const add = document.getElementById("action-add-btn");
+    const close = document.getElementById("close-add-edit-window");
+    const cancel = document.getElementById("cancel-add-edit-btn");
+    const add = document.getElementById("action-add-edit-btn");
 
-    close.addEventListener("click", close_add_window);
-    cancel.addEventListener("click", close_add_window);
-    add.addEventListener("click", add_row);
-}
+    const add_student = () => {
+        add_row();
+        modal.style.display = "none";
+        add.removeEventListener("click", add_student);
+    }
 
-function close_add_window() {
-    const modal = document.getElementById("add-student");
-    modal.style.display = "none";
+    add.addEventListener("click", add_student);
+    close.addEventListener("click", () => {
+        add.removeEventListener("click", add_row);
+        modal.style.display = "none";
+    });
+    cancel.addEventListener("click", () => {
+        add.removeEventListener("click", add_row);
+        modal.style.display = "none";
+    });
 }
 
 function add_row() {
     let table = document.getElementById("student-table").getElementsByTagName('tbody')[0];
 
-    let group = document.getElementById("group-add").value;
-    let full_name = document.getElementById("name-add").value;
-    let gender = document.getElementById("gender-add").value;
-    let date = document.getElementById("date-add").value;
+    let group = document.getElementById("group-add-edit").value;
+    let full_name = document.getElementById("name-add-edit").value;
+    let gender = document.getElementById("gender-add-edit").value;
+    let date = document.getElementById("date-add-edit").value;
 
     if (full_name.trim() === "" || date === "") {
         alert("Please fill in all required fields.");
@@ -66,15 +73,18 @@ function add_row() {
 
     new_row.cells[0].addEventListener("change", update_main_checkbox);
     new_row.cells[6].querySelector(".remove-btn").addEventListener("click", function() {
-        const row = this.closest("tr");
-        if(row.cells[0].querySelector("input").checked){
-            open_remove_window(row);
+        if(new_row.cells[0].querySelector("input").checked){
+            open_remove_window(new_row);
+        }
+    });
+    new_row.cells[6].querySelector(".edit-btn").addEventListener("click", function() {
+        if(new_row.cells[0].querySelector("input").checked){
+            open_edit_window(new_row);
         }
     });
 
-    document.getElementById("name-add").value = "";
-    document.getElementById("date-add").value = "";
-    close_add_window();
+    document.getElementById("name-add-edit").value = "";
+    document.getElementById("date-add-edit").value = "";
 
     update_main_checkbox();
 }
@@ -135,24 +145,24 @@ document.querySelectorAll(".edit-btn").forEach(button => {
 });
 
 function open_edit_window(row){
-    const modal = document.getElementById("edit-student");
+    const modal = document.getElementById("add-edit-student");
     
     modal.style.display = "block";
     
-    const close = document.getElementById("close-edit-window");
-    const cancel = document.getElementById("cancel-edit-btn");
-    const edit = document.getElementById("action-edit-btn");
+    const close = document.getElementById("close-add-edit-window");
+    const cancel = document.getElementById("cancel-add-edit-btn");
+    const edit = document.getElementById("action-add-edit-btn");
 
     const row_group = row.children[1].textContent.trim();
     const row_name = row.querySelector(".full-name").textContent.trim();  
     const row_gender = row.children[3].textContent.trim();
     const row_date = row.children[4].textContent.trim();  
-
-    let group = document.getElementById("group-edit");
-    let name = document.getElementById("name-edit");
-    let gender = document.getElementById("gender-edit");
-    let date = document.getElementById("date-edit");
     let formated_date = row_date.split('.').reverse().join('-');
+
+    let group = document.getElementById("group-add-edit");
+    let name = document.getElementById("name-add-edit");
+    let gender = document.getElementById("gender-add-edit");
+    let date = document.getElementById("date-add-edit");
 
     group.value = row_group;
     name.value = row_name;
@@ -160,7 +170,7 @@ function open_edit_window(row){
     date.value = formated_date;
 
     const edit_row = () => {
-        
+        console.log("EDITING");
         edit.removeEventListener("click", edit_row);
         modal.style.display = "none";
     }
