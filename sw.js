@@ -8,7 +8,6 @@ const ASSETS = [
   "/YanushVolodya_WebDev/header.css",
   "/YanushVolodya_WebDev/script.js",
   "/YanushVolodya_WebDev/sw.js",
-  "/YanushVolodya_WebDev/resources",
   "/YanushVolodya_WebDev/resources/add.svg",
   "/YanushVolodya_WebDev/resources/bell.svg",
   "/YanushVolodya_WebDev/resources/edit.svg",

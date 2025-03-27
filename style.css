@@ -20,8 +20,6 @@ body {
 }
 
 main {
-    /* padding: 0px 20px 0px 20px; */
-    /* flex: 5; */
     width: 100%;
     justify-items: center;
 }
@@ -31,14 +29,13 @@ main {
     overflow-x: auto;
 }
 
-
 table {
     table-layout: auto;
     border-collapse: collapse;
     border: 1px solid black;
     background-color: white;
-    min-width: 600px; /* Ensure the table is wide enough to need scrolling */
-    width: 100%; /* Remove the 95% width to allow natural width */
+    min-width: 600px;
+    width: 100%;
 }
 
 table th, td {
@@ -122,23 +119,20 @@ td img{
     font-weight: bold;
 }
 
-/* Content area - Centers text vertically */
 .content-remove {
-    flex: 1; /* Takes up remaining space */
+    flex: 1; 
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: clamp(18px, 3vw, 24px)
 }
 
-/* Buttons at the bottom */
 .choice {
     display: flex;
     justify-content: space-around;
     padding-top: 10px;
 }
 
-/* Cancel and Action buttons */
 .cancel-btn, .action-btn {
     padding: 10px 20px;
     font-size: 16px;
@@ -191,14 +185,9 @@ td img{
     margin-bottom: clamp(15px, 2.3vw, 30px);
 }
 
-
 #date {
     margin-bottom: 0px;
 }
-
-
-
-
 
 .cancel-btn, .action-btn {
     padding: 8px 15px;
