@@ -230,7 +230,7 @@
                         <span>Add Student</span>
                         <span id="close-add-edit-window" class="close">×</span>
                     </div>
-                    <div class="content-add">
+                    <div class="content-add-edit">
                         <label for="group">Group:</label>
                         <select id="group-add-edit" name="group">
                             <option value="PZ-12">PZ-12</option>
@@ -239,16 +239,19 @@
                             <option value="PZ-81">PZ-81</option>
                             <option value="IR-22">IR-22</option>
                         </select>
-        
+            
                         <label for="name">Name:</label>
-                        <input type="text" id="name-add-edit" name="name" required>
-        
+                        <div class="input-container">
+                            <input type="text" id="name-add-edit" name="name" required>
+                            <div id="error-message-name" class="error-message">Name must contain exactly 2 words</div>
+                        </div>
+            
                         <label for="gender">Gender:</label>
                         <select id="gender-add-edit" name="gender">
                             <option value="M">Male</option>
                             <option value="F">Female</option>
                         </select>
-        
+            
                         <label for="date">Birthday:</label>
                         <input type="date" id="date-add-edit" name="date">
                         <br><br>

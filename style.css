@@ -162,19 +162,19 @@ td img{
     border: 0;
 }
 
-.content-add {
+.content-add-edit {
     padding: clamp(10px, 2vw, 30px);
 }
 
-.content-add label {
+.content-add-edit label {
     display: block;
     margin-bottom: 5px;
     font-size: clamp(14px, 3vw, 32px);
     color: #333;
 }
 
-.content-add input,
-.content-add select {
+.content-add-edit input,
+.content-add-edit select {
     width: 100%;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -182,6 +182,18 @@ td img{
     box-sizing: border-box;
     background-color: #fff;
     transition: border-color 0.3s ease;
+    margin-bottom: clamp(15px, 2.3vw, 30px);
+}
+
+.content-add-edit input{
+    margin-bottom: 0px;
+}
+
+.error-message {
+    color: red;
+    font-size: clamp(8px, 1.5vw, 18px);
+    margin-top: 0px;
+    display: none;
     margin-bottom: clamp(15px, 2.3vw, 30px);
 }
 

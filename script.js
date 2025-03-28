@@ -3,29 +3,93 @@ if (add_btn){
     add_btn.addEventListener("click", open_add_window);
 }
 
+function validate_name() {
+    let full_name = document.getElementById("name-add-edit").value;
+    let formated_name = full_name.trim().replace(/\s+/g, ' ');
+
+    let error = document.getElementById("error-message-name");
+
+    if (!/^[A-Za-z]+( [A-Za-z]+)*$/.test(formated_name)) {
+        console.log("enters:", !/^[A-Za-z]+$/.test(formated_name));
+        error.textContent = "Name must be a string";
+        error.style.display = "block";
+        return;
+    }
+    else{
+        error.style.display = "none";
+    }
+
+    if (formated_name.split(" ").length !== 2){
+        error.textContent = "Name must contain exactly 2 words";
+        error.style.display = "block";
+    }
+    else{
+        error.style.display = "none";
+    }    
+}
+
+function validate_name() {
+    let date = document.getElementById("date-add-edit").value;
+    let formated_name = full_name.trim().replace(/\s+/g, ' ');
+
+    let error = document.getElementById("error-message-name");
+
+    if (!/^[A-Za-z]+( [A-Za-z]+)*$/.test(formated_name)) {
+        console.log("enters:", !/^[A-Za-z]+$/.test(formated_name));
+        error.textContent = "Name must be a string";
+        error.style.display = "block";
+        return;
+    }
+    else{
+        error.style.display = "none";
+    }
+
+    if (formated_name.split(" ").length !== 2){
+        error.textContent = "Name must contain exactly 2 words";
+        error.style.display = "block";
+    }
+    else{
+        error.style.display = "none";
+    }    
+}
+
 function open_add_window(){
     let modal = document.getElementById("add-edit-student");
     
     modal.style.display = "block";
     
+    let group = document.getElementById("group-add-edit");
+    let name_input = document.getElementById("name-add-edit");
+    let date_input = document.getElementById("date-add-edit");
+
+    name_input.value = "";
+    date_input.value = "";
+    group.value = "PZ-12";
+    
     const close = document.getElementById("close-add-edit-window");
     const cancel = document.getElementById("cancel-add-edit-btn");
     const add = document.getElementById("action-add-edit-btn");
 
-    const add_student = () => {
-        add_row();
+    const finaliser = () => {
         modal.style.display = "none";
         add.removeEventListener("click", add_student);
+        name_input.removeEventListener("input", validate_name);
     }
+
+    const add_student = () => {
+        add_row();
+        finaliser();
+    }
+
+    name_input.addEventListener('input', validate_name);
+    date_input.addEventListener('input', validate_date);
 
     add.addEventListener("click", add_student);
     close.addEventListener("click", () => {
-        add.removeEventListener("click", add_row);
-        modal.style.display = "none";
+        finaliser();
     });
     cancel.addEventListener("click", () => {
-        add.removeEventListener("click", add_row);
-        modal.style.display = "none";
+        finaliser();
     });
 }
 
@@ -185,18 +249,6 @@ function open_edit_window(row){
         modal.style.display = "none";
     });
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 const main_checkbox = document.getElementById("main-checkbox");
 if (main_checkbox){
