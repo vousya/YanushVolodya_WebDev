@@ -253,7 +253,10 @@
                         </select>
             
                         <label for="date">Birthday:</label>
-                        <input type="date" id="date-add-edit" name="date">
+                        <div class="input-container">
+                            <input type="date" id="date-add-edit" name="date" required>
+                            <div id="error-message-date" class="error-message">Name must contain exactly 2 words</div>
+                        </div>
                         <br><br>
                     </div>
                     <div class="choice">

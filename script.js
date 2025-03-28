@@ -15,43 +15,52 @@ function validate_name() {
         error.style.display = "block";
         return;
     }
-    else{
-        error.style.display = "none";
-    }
 
     if (formated_name.split(" ").length !== 2){
         error.textContent = "Name must contain exactly 2 words";
         error.style.display = "block";
     }
-    else{
-        error.style.display = "none";
-    }    
+ 
+    error.style.display = "none";
 }
 
-function validate_name() {
-    let date = document.getElementById("date-add-edit").value;
-    let formated_name = full_name.trim().replace(/\s+/g, ' ');
+function validate_date() {
+    const today = new Date();
+    const date = document.getElementById("date-add-edit").value;
+    const error = document.getElementById("error-message-date");
 
-    let error = document.getElementById("error-message-name");
-
-    if (!/^[A-Za-z]+( [A-Za-z]+)*$/.test(formated_name)) {
-        console.log("enters:", !/^[A-Za-z]+$/.test(formated_name));
-        error.textContent = "Name must be a string";
+    if (!date) {
+        error.textContent = "Please enter a date.";
         error.style.display = "block";
         return;
     }
-    else{
-        error.style.display = "none";
+
+    let birthday = new Date(date);
+    let too_old = new Date();
+    too_old.setFullYear(today.getFullYear() - 80);
+
+    let too_young = new Date();
+    too_young.setFullYear(today.getFullYear() - 17);
+
+    if (birthday > today) {
+        error.textContent = "Are you from the future?";
+        error.style.display = "block";
+        return;
+    } 
+    if (birthday > too_young) {
+        error.textContent = "You are too young to be a student.";
+        error.style.display = "block";
+        return;
+    }
+    if (birthday < too_old) {
+        error.textContent = "You are too old to be a student.";
+        error.style.display = "block";
+        return;
     }
 
-    if (formated_name.split(" ").length !== 2){
-        error.textContent = "Name must contain exactly 2 words";
-        error.style.display = "block";
-    }
-    else{
-        error.style.display = "none";
-    }    
+    error.style.display = "none";
 }
+
 
 function open_add_window(){
     let modal = document.getElementById("add-edit-student");
