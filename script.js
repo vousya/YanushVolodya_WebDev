@@ -73,6 +73,9 @@ function validate_date() {
 
 
 function open_add_window(){
+    let title_window = document.getElementById("add-edit-title");
+    title_window.textContent = "Add Student";
+
     let modal = document.getElementById("add-edit-student");
     
     modal.style.display = "block";
@@ -129,8 +132,7 @@ function add_row() {
     let full_name = formated_name.split(" ").map(word => word.charAt(0).toUpperCase() +
      word.slice(1).toLowerCase()).join(" ");
 
-    let parts = date.split("-");
-    let normal_date = parts[2] + "." + parts[1] + "." + parts[0];
+    let formated_date = date.split("-").reverse().join(".");
 
     let new_row = table.insertRow();
     
@@ -142,7 +144,7 @@ function add_row() {
         <span class="initials">${initials}</span>
     </td>
     <td>${gender}</td>
-    <td>${normal_date}</td>
+    <td>${formated_date}</td>
     <td>
         <img class="status" src="resources/status-inactive.svg">
     </td>
@@ -230,6 +232,9 @@ document.querySelectorAll(".edit-btn").forEach(button => {
 });
 
 function open_edit_window(row){
+    let title_window = document.getElementById("add-edit-title");
+    title_window.textContent = "Edit Student";
+
     const modal = document.getElementById("add-edit-student");
     
     modal.style.display = "block";
@@ -269,12 +274,14 @@ function open_edit_window(row){
         console.log("EDITING");
 
         if (validate_name() && validate_date()){
-            row.children[1].textContent = group_input.value;
+            let formated_date = date_input.value.split('-').reverse().join('.');
             let formated_name = name_input.value.split(" ").map(word => word.charAt(0).toUpperCase() +
             word.slice(1).toLowerCase()).join(" ");
+
+            row.children[1].textContent = group_input.value;
             row.querySelector(".full-name").textContent = formated_name;
             row.children[3].textContent = gender_input.value;
-            row.children[4].textContent = date_input.value;
+            row.children[4].textContent = formated_date;
         }
 
         finaliser();
