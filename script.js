@@ -9,19 +9,26 @@ function validate_name() {
 
     let error = document.getElementById("error-message-name");
 
+    if(formated_name === ""){
+        error.textContent = "Enter full name";
+        error.style.display = "block";
+        return false;
+    }
+
     if (!/^[A-Za-z]+( [A-Za-z]+)*$/.test(formated_name)) {
-        console.log("enters:", !/^[A-Za-z]+$/.test(formated_name));
         error.textContent = "Name must be a string";
         error.style.display = "block";
-        return;
+        return false;
     }
 
     if (formated_name.split(" ").length !== 2){
         error.textContent = "Name must contain exactly 2 words";
         error.style.display = "block";
+        return false;
     }
  
     error.style.display = "none";
+    return true;
 }
 
 function validate_date() {
@@ -32,7 +39,7 @@ function validate_date() {
     if (!date) {
         error.textContent = "Please enter a date.";
         error.style.display = "block";
-        return;
+        return false;
     }
 
     let birthday = new Date(date);
@@ -45,20 +52,23 @@ function validate_date() {
     if (birthday > today) {
         error.textContent = "Are you from the future?";
         error.style.display = "block";
-        return;
-    } 
+        return false;
+    }
+
     if (birthday > too_young) {
         error.textContent = "You are too young to be a student.";
         error.style.display = "block";
-        return;
+        return false;
     }
+
     if (birthday < too_old) {
         error.textContent = "You are too old to be a student.";
         error.style.display = "block";
-        return;
+        return false;
     }
 
     error.style.display = "none";
+    return true;
 }
 
 
@@ -81,41 +91,43 @@ function open_add_window(){
 
     const finaliser = () => {
         modal.style.display = "none";
+
         add.removeEventListener("click", add_student);
+        close.removeEventListener("click", finaliser);
+        cancel.removeEventListener("click", finaliser);
+
         name_input.removeEventListener("input", validate_name);
+        date_input.removeEventListener('input', validate_date);
     }
 
     const add_student = () => {
-        add_row();
-        finaliser();
+        if (validate_name() && validate_date()){
+            add_row();
+            finaliser();
+        }
     }
 
     name_input.addEventListener('input', validate_name);
     date_input.addEventListener('input', validate_date);
 
     add.addEventListener("click", add_student);
-    close.addEventListener("click", () => {
-        finaliser();
-    });
-    cancel.addEventListener("click", () => {
-        finaliser();
-    });
+    close.addEventListener("click", finaliser);
+    cancel.addEventListener("click", finaliser);
 }
 
 function add_row() {
     let table = document.getElementById("student-table").getElementsByTagName('tbody')[0];
 
     let group = document.getElementById("group-add-edit").value;
-    let full_name = document.getElementById("name-add-edit").value;
+    let full_name_input = document.getElementById("name-add-edit").value;
+    let formated_name = full_name_input.trim().replace(/\s+/g, ' ');
     let gender = document.getElementById("gender-add-edit").value;
     let date = document.getElementById("date-add-edit").value;
 
-    if (full_name.trim() === "" || date === "") {
-        alert("Please fill in all required fields.");
-        return;
-    }
+    let initials = formated_name.split(" ").map(word => word[0]).join(" ").toUpperCase();
 
-    let initials = full_name.split(" ").map(word => word[0]).join(" ").toUpperCase();
+    let full_name = formated_name.split(" ").map(word => word.charAt(0).toUpperCase() +
+     word.slice(1).toLowerCase()).join(" ");
 
     let parts = date.split("-");
     let normal_date = parts[2] + "." + parts[1] + "." + parts[0];
@@ -232,31 +244,48 @@ function open_edit_window(row){
     const row_date = row.children[4].textContent.trim();  
     let formated_date = row_date.split('.').reverse().join('-');
 
-    let group = document.getElementById("group-add-edit");
-    let name = document.getElementById("name-add-edit");
-    let gender = document.getElementById("gender-add-edit");
-    let date = document.getElementById("date-add-edit");
+    let group_input = document.getElementById("group-add-edit");
+    let name_input = document.getElementById("name-add-edit");
+    let date_input = document.getElementById("date-add-edit");
+    let gender_input = document.getElementById("gender-add-edit");
 
-    group.value = row_group;
-    name.value = row_name;
-    gender.value = row_gender;
-    date.value = formated_date;
+    group_input.value = row_group;
+    name_input.value = row_name;
+    gender_input.value = row_gender;
+    date_input.value = formated_date;
 
-    const edit_row = () => {
-        console.log("EDITING");
+    const finaliser = () => {
         edit.removeEventListener("click", edit_row);
+        close.removeEventListener("click", finaliser);
+        cancel.removeEventListener("click", finaliser);
+
+        name_input.removeEventListener('input', validate_name);
+        date_input.removeEventListener('input', validate_date);
+
         modal.style.display = "none";
     }
 
+    const edit_row = () => {
+        console.log("EDITING");
+
+        if (validate_name() && validate_date()){
+            row.children[1].textContent = group_input.value;
+            let formated_name = name_input.value.split(" ").map(word => word.charAt(0).toUpperCase() +
+            word.slice(1).toLowerCase()).join(" ");
+            row.querySelector(".full-name").textContent = formated_name;
+            row.children[3].textContent = gender_input.value;
+            row.children[4].textContent = date_input.value;
+        }
+
+        finaliser();
+    }
+
+    name_input.addEventListener('input', validate_name);
+    date_input.addEventListener('input', validate_date);
+
     edit.addEventListener("click", edit_row);
-    close.addEventListener("click", () => {
-        edit.removeEventListener("click", edit_row);
-        modal.style.display = "none";
-    });
-    cancel.addEventListener("click", () => {
-        edit.removeEventListener("click", edit_row);
-        modal.style.display = "none";
-    });
+    close.addEventListener("click", finaliser);
+    cancel.addEventListener("click", finaliser);
 }
 
 const main_checkbox = document.getElementById("main-checkbox");
