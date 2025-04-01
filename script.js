@@ -1,5 +1,5 @@
 const add_btn = document.getElementById("add-button");
-if (add_btn){
+if (add_btn) {
     add_btn.addEventListener("click", open_add_window);
 }
 
@@ -9,24 +9,24 @@ function validate_name() {
 
     let error = document.getElementById("error-message-name");
 
-    if(formated_name === ""){
+    if (formated_name === "") {
         error.textContent = "Enter full name";
         error.style.display = "block";
         return false;
     }
 
-    if (!/^[A-Za-z]+( [A-Za-z]+)*$/.test(formated_name)) {
+    if (!/^[A-Za-z]+([ '`-][A-Za-z]+)*$/.test(formated_name)) {
         error.textContent = "Name must be a string";
         error.style.display = "block";
         return false;
     }
 
-    if (formated_name.split(" ").length !== 2){
+    if (formated_name.split(" ").length !== 2) {
         error.textContent = "Name must contain exactly 2 words";
         error.style.display = "block";
         return false;
     }
- 
+
     error.style.display = "none";
     return true;
 }
@@ -71,15 +71,14 @@ function validate_date() {
     return true;
 }
 
-
-function open_add_window(){
+function open_add_window() {
     let title_window = document.getElementById("add-edit-title");
     title_window.textContent = "Add Student";
 
     let modal = document.getElementById("add-edit-student");
-    
+
     modal.style.display = "block";
-    
+
     let group = document.getElementById("group-add-edit");
     let name_input = document.getElementById("name-add-edit");
     let date_input = document.getElementById("date-add-edit");
@@ -87,7 +86,7 @@ function open_add_window(){
     name_input.value = "";
     date_input.value = "";
     group.value = "PZ-12";
-    
+
     const close = document.getElementById("close-add-edit-window");
     const cancel = document.getElementById("cancel-add-edit-btn");
     const add = document.getElementById("action-add-edit-btn");
@@ -101,14 +100,14 @@ function open_add_window(){
 
         name_input.removeEventListener("input", validate_name);
         date_input.removeEventListener('input', validate_date);
-    }
+    };
 
     const add_student = () => {
-        if (validate_name() && validate_date()){
+        if (validate_name() && validate_date()) {
             add_row();
             finaliser();
         }
-    }
+    };
 
     name_input.addEventListener('input', validate_name);
     date_input.addEventListener('input', validate_date);
@@ -128,14 +127,19 @@ function add_row() {
     let date = document.getElementById("date-add-edit").value;
 
     let initials = formated_name.split(" ").map(word => word[0]).join(" ").toUpperCase();
-
-    let full_name = formated_name.split(" ").map(word => word.charAt(0).toUpperCase() +
-     word.slice(1).toLowerCase()).join(" ");
-
+    let full_name = formated_name.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
     let formated_date = date.split("-").reverse().join(".");
 
+    const student_json = {
+        group: group,
+        full_name: full_name,
+        gender: gender,
+        date_of_birth: date 
+    };
+    console.log("Added student JSON:", JSON.stringify(student_json));
+
     let new_row = table.insertRow();
-    
+
     new_row.innerHTML = `
     <td><input type="checkbox" class="checkbox"></td>
     <td>${group}</td>
@@ -160,12 +164,12 @@ function add_row() {
 
     new_row.cells[0].addEventListener("change", update_main_checkbox);
     new_row.cells[6].querySelector(".remove-btn").addEventListener("click", function() {
-        if(new_row.cells[0].querySelector("input").checked){
+        if (new_row.cells[0].querySelector("input").checked) {
             open_remove_window(new_row);
         }
     });
     new_row.cells[6].querySelector(".edit-btn").addEventListener("click", function() {
-        if(new_row.cells[0].querySelector("input").checked){
+        if (new_row.cells[0].querySelector("input").checked) {
             open_edit_window(new_row);
         }
     });
@@ -179,14 +183,14 @@ function add_row() {
 document.querySelectorAll(".remove-btn").forEach(button => {
     button.addEventListener("click", function() {
         const row = this.closest("tr");
-        if(row.cells[0].querySelector("input").checked){
+        if (row.cells[0].querySelector("input").checked) {
             console.log("Removing row:", row);
             open_remove_window(row);
         }
     });
 });
 
-function open_remove_window(row){
+function open_remove_window(row) {
     let modal = document.getElementById("remove-student");
 
     let name = row.querySelector(".full-name").textContent;
@@ -208,45 +212,44 @@ function open_remove_window(row){
     };
 
     remove.addEventListener("click", remove_student);
-    close.addEventListener("click", function(){
+    close.addEventListener("click", function() {
         remove.removeEventListener("click", remove_student);
         modal.style.display = "none";
     });
-    cancel.addEventListener("click", function(){
+    cancel.addEventListener("click", function() {
         remove.removeEventListener("click", remove_student);
         modal.style.display = "none";
     });
-    
-    document.getElementById("remove-text").textContent = "Are you " +
-    "sure you want to delete " + name + "?"
+
+    document.getElementById("remove-text").textContent = "Are you sure you want to delete " + name + "?";
 }
 
 document.querySelectorAll(".edit-btn").forEach(button => {
     button.addEventListener("click", function(e) {
         let row = e.target.closest("tr");
-        if(row.cells[0].querySelector("input").checked){
+        if (row.cells[0].querySelector("input").checked) {
             console.log("Editing row:", row);
             open_edit_window(row);
         }
     });
 });
 
-function open_edit_window(row){
+function open_edit_window(row) {
     let title_window = document.getElementById("add-edit-title");
     title_window.textContent = "Edit Student";
 
     const modal = document.getElementById("add-edit-student");
-    
+
     modal.style.display = "block";
-    
+
     const close = document.getElementById("close-add-edit-window");
     const cancel = document.getElementById("cancel-add-edit-btn");
     const edit = document.getElementById("action-add-edit-btn");
 
     const row_group = row.children[1].textContent.trim();
-    const row_name = row.querySelector(".full-name").textContent.trim();  
+    const row_name = row.querySelector(".full-name").textContent.trim();
     const row_gender = row.children[3].textContent.trim();
-    const row_date = row.children[4].textContent.trim();  
+    const row_date = row.children[4].textContent.trim();
     let formated_date = row_date.split('.').reverse().join('-');
 
     let group_input = document.getElementById("group-add-edit");
@@ -268,24 +271,29 @@ function open_edit_window(row){
         date_input.removeEventListener('input', validate_date);
 
         modal.style.display = "none";
-    }
+    };
 
     const edit_row = () => {
-        console.log("EDITING");
-
-        if (validate_name() && validate_date()){
+        if (validate_name() && validate_date()) {
             let formated_date = date_input.value.split('-').reverse().join('.');
-            let formated_name = name_input.value.split(" ").map(word => word.charAt(0).toUpperCase() +
-            word.slice(1).toLowerCase()).join(" ");
+            let formated_name = name_input.value.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
+
+            const student_json = {
+                group: group_input.value,
+                full_name: formated_name,
+                gender: gender_input.value,
+                date_of_birth: date_input.value 
+            };
+            console.log("Edited student JSON:", JSON.stringify(student_json));
 
             row.children[1].textContent = group_input.value;
             row.querySelector(".full-name").textContent = formated_name;
             row.children[3].textContent = gender_input.value;
             row.children[4].textContent = formated_date;
-        }
 
-        finaliser();
-    }
+            finaliser();
+        }
+    };
 
     name_input.addEventListener('input', validate_name);
     date_input.addEventListener('input', validate_date);
@@ -296,13 +304,13 @@ function open_edit_window(row){
 }
 
 const main_checkbox = document.getElementById("main-checkbox");
-if (main_checkbox){
-    main_checkbox.addEventListener("click", function(){
+if (main_checkbox) {
+    main_checkbox.addEventListener("click", function() {
         let is_checked = this.checked;
         document.querySelectorAll('#student-table input[type="checkbox"]').forEach(checkbox => {
             checkbox.checked = is_checked;
         });
-    })
+    });
 }
 
 document.querySelectorAll('#student-table input[type="checkbox"]').forEach(checkbox => {
@@ -321,9 +329,7 @@ function bell_animation(event) {
     const bell = event.target;
     
     bell.classList.remove('swinging');
-
     void bell.offsetWidth;
-
     bell.classList.add('swinging');
 }
 
@@ -331,40 +337,40 @@ let bell = document.getElementById("bell");
 let messages = document.getElementById("bell-messages");
 let hideTimeout;
 
-bell.addEventListener("mouseenter", function () {
+bell.addEventListener("mouseenter", function() {
     clearTimeout(hideTimeout);
     messages.style.display = "block";
 });
 
-messages.addEventListener("mouseenter", function () {
+messages.addEventListener("mouseenter", function() {
     clearTimeout(hideTimeout);
 });
 
-bell.addEventListener("mouseleave", function () {
+bell.addEventListener("mouseleave", function() {
     hideTimeout = setTimeout(() => messages.style.display = "none", 300);
 });
 
-messages.addEventListener("mouseleave", function () {
+messages.addEventListener("mouseleave", function() {
     hideTimeout = setTimeout(() => messages.style.display = "none", 300);
 });
 
 let profile = document.getElementById("profile");
 let options = document.getElementById("profile-options");
 
-profile.addEventListener("mouseenter", function () {
+profile.addEventListener("mouseenter", function() {
     clearTimeout(hideTimeout);
     options.style.display = "block";
 });
 
-options.addEventListener("mouseenter", function () {
+options.addEventListener("mouseenter", function() {
     clearTimeout(hideTimeout);
 });
 
-profile.addEventListener("mouseleave", function () {
+profile.addEventListener("mouseleave", function() {
     hideTimeout = setTimeout(() => options.style.display = "none", 300);
 });
 
-options.addEventListener("mouseleave", function () {
+options.addEventListener("mouseleave", function() {
     hideTimeout = setTimeout(() => options.style.display = "none", 300);
 });
 
@@ -373,11 +379,10 @@ burger.addEventListener("click", toggleMenu);
 
 function toggleMenu() {
     let navigation = document.getElementById('navigation');
-    if (burger.textContent == "☰"){
+    if (burger.textContent == "☰") {
         navigation.style.display = "block";
         burger.textContent = "✖";
-    }
-    else {
+    } else {
         navigation.style.display = "none";
         burger.textContent = "☰";
     }
