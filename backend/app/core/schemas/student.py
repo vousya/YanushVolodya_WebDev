@@ -89,7 +89,6 @@ class StudentUpdate(BaseModel):
 
 
 class StudentResponse(BaseModel):
-    id: int
     group_name: str
     name: str
     gender: str
