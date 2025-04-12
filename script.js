@@ -118,65 +118,46 @@ function open_add_window() {
 }
 
 function add_row() {
-    let table = document.getElementById("student-table").getElementsByTagName('tbody')[0];
-
     let group = document.getElementById("group-add-edit").value;
     let full_name_input = document.getElementById("name-add-edit").value;
     let formated_name = full_name_input.trim().replace(/\s+/g, ' ');
     let gender = document.getElementById("gender-add-edit").value;
     let date = document.getElementById("date-add-edit").value;
 
-    let initials = formated_name.split(" ").map(word => word[0]).join(" ").toUpperCase();
     let full_name = formated_name.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
-    let formated_date = date.split("-").reverse().join(".");
 
     const student_json = {
-        group: group,
-        full_name: full_name,
+        group_name: group,
+        name: full_name,
         gender: gender,
-        date_of_birth: date 
+        birthday: date,
+        status: false
     };
+
     console.log("Added student JSON:", JSON.stringify(student_json));
-
-    let new_row = table.insertRow();
-
-    new_row.innerHTML = `
-    <td><input type="checkbox" class="checkbox"></td>
-    <td>${group}</td>
-    <td>
-        <span class="full-name">${full_name}</span>
-        <span class="initials">${initials}</span>
-    </td>
-    <td>${gender}</td>
-    <td>${formated_date}</td>
-    <td>
-        <img class="status" src="resources/status-inactive.svg">
-    </td>
-    <td>
-        <button class="edit-btn">
-           <img src="resources/edit.svg">
-        </button>
-        <button class="remove-btn">
-            <img src="resources/remove.svg">
-        </button>
-    </td>
-    `;
-
-    new_row.cells[0].addEventListener("change", update_main_checkbox);
-    new_row.cells[6].querySelector(".remove-btn").addEventListener("click", function() {
-        if (new_row.cells[0].querySelector("input").checked) {
-            open_remove_window(new_row);
+    
+    fetch(`http://127.0.0.1:8000/students`, {
+        method: "POST",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(student_json)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Failed to add student");
         }
+        return response.json();
+    })
+    .then(data => {
+        console.log("Added student:", data);
+        fetchStudents();
+    })
+    .catch(error => {
+        console.error("Error:", error);
     });
-    new_row.cells[6].querySelector(".edit-btn").addEventListener("click", function() {
-        if (new_row.cells[0].querySelector("input").checked) {
-            open_edit_window(new_row);
-        }
-    });
-
-    document.getElementById("name-add-edit").value = "";
-    document.getElementById("date-add-edit").value = "";
-
+    
     update_main_checkbox();
 }
 
@@ -202,6 +183,27 @@ function open_remove_window(row) {
     const remove = document.getElementById("action-remove-btn");
 
     const remove_student = () => {
+
+        student_id = row.querySelector(".student-id").textContent;
+        fetch(`http://127.0.0.1:8000/students/${student_id}`, {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json"
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to delete student");
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Deleted student:", data);
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });
+
         const table = document.getElementById("student-table");
         const rowIndex = row.rowIndex;
         table.deleteRow(rowIndex);
@@ -275,16 +277,42 @@ function open_edit_window(row) {
 
     const edit_row = () => {
         if (validate_name() && validate_date()) {
-            let formated_date = date_input.value.split('-').reverse().join('.');
-            let formated_name = name_input.value.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
 
+            let formated_name = name_input.value.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
+            
             const student_json = {
-                group: group_input.value,
-                full_name: formated_name,
+                group_name: group_input.value,
+                name: formated_name,
                 gender: gender_input.value,
-                date_of_birth: date_input.value 
+                birthday: date_input.value,
+                status: false
             };
+
             console.log("Edited student JSON:", JSON.stringify(student_json));
+            
+            student_id = row.querySelector(".student-id").textContent;
+            fetch(`http://127.0.0.1:8000/students/${student_id}`, {
+                method: "PATCH",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(student_json)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to update student");
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Updated student:", data);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+
+            let formated_date = date_input.value.split('-').reverse().join('.');
 
             row.children[1].textContent = group_input.value;
             row.querySelector(".full-name").textContent = formated_name;

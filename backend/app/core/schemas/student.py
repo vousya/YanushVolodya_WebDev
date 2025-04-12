@@ -12,6 +12,7 @@ class StudentCreate(BaseModel):
     name: str
     birthday: date
     gender: str
+    status: bool
 
     @field_validator('group_name')
     @classmethod
@@ -89,6 +90,7 @@ class StudentUpdate(BaseModel):
 
 
 class StudentResponse(BaseModel):
+    student_id: int
     group_name: str
     name: str
     gender: str

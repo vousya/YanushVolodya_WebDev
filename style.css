@@ -238,6 +238,10 @@ td img{
     display: none;
 }
 
+.student-id {
+    display: none;
+}
+
 @media (max-width: 505px) {
     .modal-content{
         left: 25%;
