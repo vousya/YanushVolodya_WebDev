@@ -8,6 +8,7 @@ from app.core.aunthefication import authenticate_user, create_access_token, vali
 
 router = APIRouter(tags=["Students"])
 
+
 @router.get(
     "/students",
     dependencies=[Depends(validate_token)],
@@ -28,6 +29,7 @@ async def get_students():
 
 @router.get(
     "/students/{student_id}",
+    dependencies=[Depends(validate_token)],
     response_model=StudentResponse
 )
 async def get_student(
@@ -46,6 +48,7 @@ async def get_student(
 
 @router.post(
     "/students",
+    dependencies=[Depends(validate_token)],
     response_model=StudentResponse
 )
 async def create_student(
@@ -64,6 +67,7 @@ async def create_student(
 
 @router.patch(
     "/students/{student_id}",
+    dependencies=[Depends(validate_token)],
     response_model=StudentResponse
 )
 async def edit_student(
@@ -80,8 +84,10 @@ async def edit_student(
         status=student.status
     )
 
+
 @router.delete(
     "/students/{student_id}",
+    dependencies=[Depends(validate_token)],
     response_model=StudentResponse
 )
 async def delete_student(
@@ -97,8 +103,9 @@ async def delete_student(
         status=student.status
     )
 
+
 @router.post(
-    "/token"
+    "/token",
 )
 async def login(
         form_data: OAuth2PasswordRequestForm = Depends()

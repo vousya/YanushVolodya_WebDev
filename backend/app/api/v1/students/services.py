@@ -1,5 +1,6 @@
 from app.core.models import Student, Login
 from sqlalchemy import select
+from app.core.aunthefication import hash_password
 
 def generate_corporate_post(name: str, group: str) -> str:
     name = name.lower().replace(" ", ".")
@@ -41,7 +42,7 @@ class StudentService:
                     .where(Student.student_id == student_db.student_id))
             student = result.scalar_one_or_none()
             post = generate_corporate_post(student.name, student.group_name)
-            password = str(student.birthday)
+            password = hash_password(str(student.birthday))
 
             result = await session.execute(select(Login)
                     .where(Login.email == post)

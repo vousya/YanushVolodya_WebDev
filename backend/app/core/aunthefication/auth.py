@@ -7,6 +7,8 @@ from sqlalchemy import select
 from app.core.models import Login
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import HTTPException, Depends, status
+import hmac
+import hashlib
 
 
 load_dotenv(dotenv_path="app/core/.env")
@@ -18,6 +20,16 @@ ALGORITHM = "HS256"
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
+def hash_password(password: str) -> str:
+    return hmac.new(
+        key=secret_key.encode(),
+        msg=password.encode(),
+        digestmod=hashlib.sha256
+    ).hexdigest()
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return hash_password(plain_password) == hashed_password
+
 def create_access_token(data: dict):
     to_encode = data.copy()
     expire = datetime.now() + timedelta(minutes=15)
@@ -28,7 +40,7 @@ async def authenticate_user(email: str, password: str):
     async for session in postgres_database.get_session():
         result = await session.execute(select(Login).where(Login.email == email))
         user = result.scalar_one_or_none()
-        if user and user.password == password:
+        if user and verify_password(plain_password=password, hashed_password=user.password):
             return True
     return False
 
@@ -38,7 +50,6 @@ async def validate_token(token: str = Depends(oauth2_scheme)):
         detail="Invalid authentication credentials.",
         headers={"WWW-Authenticate": "Bearer"},
     )
-
     try:
         payload = jwt.decode(token, secret_key, algorithms=[ALGORITHM])
         email: str = payload.get("sub")
