@@ -136,9 +136,11 @@ function add_row() {
 
     console.log("Added student JSON:", JSON.stringify(student_json));
     
+    const token = localStorage.getItem("access_token");
     fetch(`http://127.0.0.1:8000/students`, {
         method: "POST",
         headers: {
+            Authorization: `Bearer ${token}`,
             "Accept": "application/json",
             "Content-Type": "application/json"
         },
@@ -185,9 +187,12 @@ function open_remove_window(row) {
     const remove_student = () => {
 
         student_id = row.querySelector(".student-id").textContent;
+
+        const token = localStorage.getItem("access_token");
         fetch(`http://127.0.0.1:8000/students/${student_id}`, {
             method: "DELETE",
             headers: {
+                Authorization: `Bearer ${token}`,
                 "Accept": "application/json"
             }
         })
@@ -291,9 +296,12 @@ function open_edit_window(row) {
             console.log("Edited student JSON:", JSON.stringify(student_json));
             
             student_id = row.querySelector(".student-id").textContent;
+
+            const token = localStorage.getItem("access_token");
             fetch(`http://127.0.0.1:8000/students/${student_id}`, {
                 method: "PATCH",
                 headers: {
+                    Authorization: `Bearer ${token}`,
                     "Accept": "application/json",
                     "Content-Type": "application/json"
                 },

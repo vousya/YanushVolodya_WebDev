@@ -8,7 +8,7 @@ class Login(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     student_id = Column(Integer, ForeignKey("students.student_id"), unique=True)
-    email = Column(String, unique=True, index=True)  # e.g., joseph.devis.pz81
+    email = Column(String, unique=True, index=True)  # e.g., joseph.devis.pz81@lpnu.ua
     password = Column(String)  # birthday as password (store as string or hash)
 
     student = relationship("Student")  # assuming you have a Student model

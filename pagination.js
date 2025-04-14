@@ -3,10 +3,15 @@ let currentPage = 1;
 let students = [];
 
 async function fetchStudents() {
-  const response = await fetch("http://127.0.0.1:8000/students");
+  const token = localStorage.getItem("access_token");
+  const response = await fetch("http://127.0.0.1:8000/students", {
+    method: "GET",
+    headers: {
+        Authorization: `Bearer ${token}`,
+    },
+    });
   const data = await response.json();
   console.log("Fetch Student:", data);
-  console.log("");
   students = data.students;
   renderTable();
   renderPagination();
