@@ -1,5 +1,10 @@
-from app.core.models import Student
+from app.core.models import Student, Login
 from sqlalchemy import select
+
+def generate_corporate_post(name: str, group: str) -> str:
+    name = name.lower().replace(" ", ".")
+    group = group.lower().replace("-", "")
+    return f"{name}.{group}@lpnu.ua"
 
 class StudentService:
     @classmethod
@@ -28,9 +33,32 @@ class StudentService:
 
         async for session in database.get_session():
             async with session.begin():
-                session.add(student_db)  # Add the new student without specifying the student_id
-            await session.refresh(student_db)  # Refresh to get the student ID
-            return student_db  # student_db will now contain the auto-generated student_id
+                session.add(student_db)
+            await session.refresh(student_db)
+
+        async for session in database.get_session():
+            result = await session.execute(select(Student)
+                    .where(Student.student_id == student_db.student_id))
+            student = result.scalar_one_or_none()
+            post = generate_corporate_post(student.name, student.group_name)
+            password = str(student.birthday)
+
+            result = await session.execute(select(Login)
+                    .where(Login.email == post)
+                    .where(Login.password == password)
+            )
+            existing = result.scalar_one_or_none()
+
+            if not existing:
+                new_account = Login(
+                    student_id=student.student_id,
+                    email=post,
+                    password=password
+                )
+                session.add(new_account)
+                await session.commit()
+
+        return student_db
 
     @classmethod
     async def edit_student(cls, database, student_update, student_id) -> Student:

@@ -1,3 +1,6 @@
-__all__ = ["Student"]
+__all__ = [
+    "Student",
+    "Login"
+]
 
-from .student import Student
+from .student import Student, Login
