@@ -1,1 +1,6 @@
 backend/app/core/.env
+.idea
+.vscode
+backend/.idea
+**/__pycache__/
+backend/test.py
