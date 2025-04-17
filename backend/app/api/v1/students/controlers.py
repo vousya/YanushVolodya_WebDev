@@ -3,7 +3,7 @@ from app.core.database import postgres_database
 from fastapi import APIRouter, Depends, HTTPException
 from app.core.schemas import StudentResponse, StudentsResponse, StudentCreate, StudentUpdate
 from fastapi.security import OAuth2PasswordRequestForm
-from app.core.aunthefication import authenticate_user, create_access_token, validate_token
+from app.core.aunthefication import validate_token
 
 
 router = APIRouter(tags=["Students"])
@@ -55,6 +55,10 @@ async def create_student(
     student: StudentCreate
 ):
     student_db = await student_service.create_student(database=postgres_database, student=student)
+
+    if not student_db:
+        raise HTTPException(status_code=400, detail="We already have this student")
+
     return StudentResponse(
         student_id=student_db.student_id,
         group_name=student_db.group_name,
@@ -110,9 +114,21 @@ async def delete_student(
 async def login(
         form_data: OAuth2PasswordRequestForm = Depends()
 ):
-    user = await authenticate_user(form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(status_code=400, detail="Incorrect email or password")
+    access_token = await student_service.login_user(database=postgres_database, email=form_data.username, password=form_data.password)
 
-    access_token = create_access_token(data={"sub": form_data.username})
+    if not access_token:
+        raise HTTPException(status_code=400, detail="Incorrect email or password")
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.post(
+    "/logout",
+    dependencies=[Depends(validate_token)],
+)
+async def logout(
+        token: str
+):
+    result = await student_service.logout_student(database=postgres_database, token=token)
+    if not result:
+        return "Failed to log out"
+    return "Successfully logged out"

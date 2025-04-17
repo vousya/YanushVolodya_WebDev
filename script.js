@@ -136,7 +136,7 @@ function add_row() {
 
     console.log("Added student JSON:", JSON.stringify(student_json));
     
-    const token = localStorage.getItem("access_token");
+    const token = sessionStorage.getItem("access_token");
     fetch(`http://127.0.0.1:8000/students`, {
         method: "POST",
         headers: {
@@ -147,6 +147,12 @@ function add_row() {
         body: JSON.stringify(student_json)
     })
     .then(response => {
+        if (response.status === 400) {
+            alert("⚠️ This student already exists. Please check the details and try again.");
+        }
+        if(response.status === 401){
+            window.location.href = "/index.html";
+        };
         if (!response.ok) {
             throw new Error("Failed to add student");
         }
@@ -188,7 +194,7 @@ function open_remove_window(row) {
 
         student_id = row.querySelector(".student-id").textContent;
 
-        const token = localStorage.getItem("access_token");
+        const token = sessionStorage.getItem("access_token");
         fetch(`http://127.0.0.1:8000/students/${student_id}`, {
             method: "DELETE",
             headers: {
@@ -197,6 +203,9 @@ function open_remove_window(row) {
             }
         })
         .then(response => {
+            if(response.status === 401){
+                window.location.href = "/index.html";
+            };
             if (!response.ok) {
                 throw new Error("Failed to delete student");
             }
@@ -204,6 +213,7 @@ function open_remove_window(row) {
         })
         .then(data => {
             console.log("Deleted student:", data);
+            fetchStudents();
         })
         .catch(error => {
             console.error("Error:", error);
@@ -297,7 +307,7 @@ function open_edit_window(row) {
             
             student_id = row.querySelector(".student-id").textContent;
 
-            const token = localStorage.getItem("access_token");
+            const token = sessionStorage.getItem("access_token");
             fetch(`http://127.0.0.1:8000/students/${student_id}`, {
                 method: "PATCH",
                 headers: {
@@ -308,6 +318,9 @@ function open_edit_window(row) {
                 body: JSON.stringify(student_json)
             })
             .then(response => {
+                if(response.status === 401){
+                    window.location.href = "/index.html";
+                };
                 if (!response.ok) {
                     throw new Error("Failed to update student");
                 }
@@ -395,7 +408,7 @@ let options = document.getElementById("profile-options");
 
 profile.addEventListener("mouseenter", function() {
     clearTimeout(hideTimeout);
-    options.style.display = "block";
+    options.style.display = "flex";
 });
 
 options.addEventListener("mouseenter", function() {
@@ -423,3 +436,22 @@ function toggleMenu() {
         burger.textContent = "☰";
     }
 }
+
+document.getElementById("logout-btn").addEventListener("click", async () => {
+    const token = sessionStorage.getItem("access_token");
+
+    const response = await fetch(`http://localhost:8000/logout?token=${token}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": `Bearer ${token}`
+        },
+        body: new URLSearchParams()
+    });
+
+    const result = await response.json();
+    console.log(result);
+
+    sessionStorage.removeItem("access_token");
+    window.location.href = "/index.html"; 
+});

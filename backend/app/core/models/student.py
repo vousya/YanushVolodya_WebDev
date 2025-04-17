@@ -20,7 +20,7 @@ class Login(Base):
 class Student(Base):
     __tablename__ = 'students'
 
-    student_id = Column(Integer, primary_key=True)
+    student_id = Column(Integer, primary_key=True, autoincrement=True)
     group_name = Column(String, nullable=False)
     name = Column(String, nullable=False)
     birthday = Column(Date, nullable=False)

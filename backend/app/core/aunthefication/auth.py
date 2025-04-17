@@ -44,6 +44,11 @@ async def authenticate_user(email: str, password: str):
             return True
     return False
 
+def get_email(token):
+    payload = jwt.decode(token, secret_key, algorithms=[ALGORITHM])
+    email: str = payload.get("sub")
+    return email
+
 async def validate_token(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -51,8 +56,7 @@ async def validate_token(token: str = Depends(oauth2_scheme)):
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, secret_key, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
+        email: str = get_email(token)
         if email is None:
             raise credentials_exception
     except JWTError:

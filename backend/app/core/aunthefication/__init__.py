@@ -3,7 +3,8 @@ __all__ = [
     "authenticate_user",
     "validate_token",
     "hash_password",
-    "verify_password"
+    "verify_password",
+    "get_email"
 ]
 
 from app.core.aunthefication.auth import (
@@ -11,5 +12,6 @@ from app.core.aunthefication.auth import (
                                           create_access_token,
                                           validate_token,
                                           hash_password,
-                                          verify_password
+                                          verify_password,
+                                          get_email
                                           )

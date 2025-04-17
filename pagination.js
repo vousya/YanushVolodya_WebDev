@@ -3,14 +3,18 @@ let currentPage = 1;
 let students = [];
 
 async function fetchStudents() {
-  const token = localStorage.getItem("access_token");
+  const token = sessionStorage.getItem("access_token");
+  console.log("token = ", token);
   const response = await fetch("http://127.0.0.1:8000/students", {
     method: "GET",
     headers: {
-        Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
     });
   const data = await response.json();
+  if(response.status === 401){
+    window.location.href = "/index.html";
+  };
   console.log("Fetch Student:", data);
   students = data.students;
   renderTable();
@@ -18,6 +22,9 @@ async function fetchStudents() {
 }
 
 function renderTable() {
+  if((currentPage-1) * studentsPerPage >= students.length){
+    currentPage--;
+  }
   const start = (currentPage - 1) * studentsPerPage;
   const pageStudents = students.slice(start, start + studentsPerPage);
   const tbody = document.querySelector('#student-table tbody');

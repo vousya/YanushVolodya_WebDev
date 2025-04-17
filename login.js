@@ -20,9 +20,10 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     const data = await response.json();
 
     if (response.ok) {
-      localStorage.setItem("access_token", data.access_token);
-      window.location.href = "/student.html"; // or wherever you want to go
-    } else {
-      document.getElementById("error").innerText = data.detail || "Login failed";
+        sessionStorage.setItem("access_token", data.access_token);
+        window.location.href = "/student.html";
+    }   
+    else {
+        document.getElementById("error").innerText = data.detail || "Login failed";
     }
   });

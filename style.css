@@ -279,3 +279,34 @@ td img{
         left: 18%;
     }
 }
+
+.profile-options {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 1000;
+  }
+  
+  .profile-options button {
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .profile-options button:hover {
+    background-color: #f0f0f0;
+  }
+  
