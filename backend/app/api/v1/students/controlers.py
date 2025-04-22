@@ -114,11 +114,12 @@ async def delete_student(
 async def login(
         form_data: OAuth2PasswordRequestForm = Depends()
 ):
-    access_token = await student_service.login_user(database=postgres_database, email=form_data.username, password=form_data.password)
+    data = await student_service.login_user(database=postgres_database, email=form_data.username, password=form_data.password)
 
-    if not access_token:
+    if not data:
         raise HTTPException(status_code=400, detail="Incorrect email or password")
-    return {"access_token": access_token, "token_type": "bearer"}
+    print("\n\n\n",data, "\n\n\n\n")
+    return {"access_token": data["token"], "token_type": "bearer", "username" : data["username"]}
 
 
 @router.post(

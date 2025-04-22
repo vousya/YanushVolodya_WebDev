@@ -455,3 +455,8 @@ document.getElementById("logout-btn").addEventListener("click", async () => {
     sessionStorage.removeItem("access_token");
     window.location.href = "/index.html"; 
 });
+
+const profile_name = document.getElementById("profile-text");
+let username = sessionStorage.getItem("username");
+sessionStorage.removeItem("username");
+profile_name.textContent = username;

@@ -125,6 +125,7 @@ class StudentService:
 
     @classmethod
     async def login_user(cls, email, password, database):
+        username = ""
         user = await authenticate_user(email=email, password=password)
         if not user:
             return None
@@ -145,12 +146,14 @@ class StudentService:
                 if not student:
                     raise ValueError("Student not found")
 
+                username = student.name
                 student.status = True
 
             await session.refresh(student)
 
         access_token = create_access_token(data={"sub": email})
-        return access_token
+        data = {"token" : access_token, "username" : username}
+        return data
 
     @classmethod
     async def logout_student(cls, token, database):

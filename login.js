@@ -21,6 +21,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
     if (response.ok) {
         sessionStorage.setItem("access_token", data.access_token);
+        sessionStorage.setItem("username", data.username);
         window.location.href = "/student.html";
     }   
     else {
