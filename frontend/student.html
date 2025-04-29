@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="header.css">
+    <link rel="stylesheet" type="text/css" href="navigation.css">
+    <link rel="stylesheet" type="text/css" href="pagination.css">
+    <!-- <link rel="manifest" href="manifest.json" /> -->
+    <title>Students</title>
+
+</head>
+<body>
+    <header>
+        <div class="left-menu">
+            <div id="burger" class="burger">☰</div>
+            <div class="home">
+                <a href="student.html">
+                    <img src="resources/home.svg" alt="home" width="50" height="50">
+                </a>
+            </div>
+        </div>
+
+        <div class="right-menu">
+            <div id="bell" class="bell">
+                <button class="bell-btn">
+                    <img src="resources/bell.svg" alt="bell" width="50" height="50">
+                </button>
+            </div>
+            <div id="bell-messages" class="messages">
+                <p>No new messages</p>
+                <p>Meeting at 3 PM</p>
+                <p>System update available</p>
+            </div>
+
+            <div id="profile" class="profile">
+                <button class="profile-btn">
+                    <img src="resources/profile.svg" alt="profile" width="50" height="50">
+                    <span class="profile-text" id="profile-text">Vovus Pokus</span>
+                </button>
+            </div>
+            <div id="profile-options" class="profile-options">
+                <button id="profile-btn">Profile</button>
+                <button id="logout-btn">Log out</button>
+            </div>
+        </div>
+    </header>
+    
+    <div class="page">
+        <aside id="navigation" class="navigation">
+            <nav>
+                <ul>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="student.html" class="active-page">Students</a></li>
+                    <li><a href="tasks.html">Tasks</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main>
+            <div class="above-table">
+                <div class="table-title">
+                    <h1>Students</h1>
+                </div>
+                <div id="add-button" class="add-student">
+                    <button class="add-btn">+</button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table id="student-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <label for="main-checkbox" class="visually-hidden">Select all students</label>
+                                <input type="checkbox" id="main-checkbox">
+                            </th>
+                            <th>Group</th>
+                            <th>Name</th>
+                            <th>Gender</th>
+                            <th>Birthday</th>
+                            <th>Status</th>
+                            <th>Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+
+                <div class="pagination" id="pagination"></div>
+
+            </div>
+        </main>
+        <div>
+            <div id="remove-student" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span>Warning</span>
+                        <span id="close-remove-window" class="close">×</span>
+                    </div>
+                    <div class="content-remove">
+                        <span id="remove-text"></span>
+                    </div>
+                    <div class="choice">
+                        <button id="cancel-remove-btn" class="cancel-btn">Cancel</button>
+                        <button id="action-remove-btn" class="action-btn">OK</button>
+                    </div>
+                </div>
+            </div>
+        
+            <div id="add-edit-student" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span id="add-edit-title">Add Student</span>
+                        <span id="close-add-edit-window" class="close">×</span>
+                    </div>
+                    <div class="content-add-edit">
+                        <label for="group">Group:</label>
+                        <select id="group-add-edit" name="group">
+                            <option value="PZ-12">PZ-12</option>
+                            <option value="PZ-22">PZ-22</option>
+                            <option value="PZ-25">PZ-25</option>
+                            <option value="PZ-81">PZ-81</option>
+                            <option value="IR-22">IR-22</option>
+                        </select>
+            
+                        <label for="name">Name:</label>
+                        <div class="input-container">
+                            <input type="text" id="name-add-edit" name="name" required>
+                            <div id="error-message-name" class="error-message">Name must contain exactly 2 words</div>
+                        </div>
+            
+                        <label for="gender">Gender:</label>
+                        <select id="gender-add-edit" name="gender">
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
+                        </select>
+            
+                        <label for="date">Birthday:</label>
+                        <div class="input-container">
+                            <input type="date" id="date-add-edit" name="date" required>
+                            <div id="error-message-date" class="error-message">Name must contain exactly 2 words</div>
+                        </div>
+                        <br><br>
+                    </div>
+                    <div class="choice">
+                        <button id="cancel-add-edit-btn" class="cancel-btn">Cancel</button>
+                        <button id="action-add-edit-btn" class="action-btn">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+
+    <script src="script.js"></script>
+    <script src="pagination.js"></script>
+    <!-- <script src="init_sw.js"></script> -->
+</body>
+</html>

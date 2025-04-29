@@ -1,7 +1,7 @@
 from app.api.v1.students import student_service
-from app.core.database import postgres_database
+from app.core.databases import postgres_database, mongo_database
 from fastapi import APIRouter, Depends, HTTPException
-from app.core.schemas import StudentResponse, StudentsResponse, StudentCreate, StudentUpdate
+from app.core.schemas import StudentResponse, StudentsResponse, StudentCreate, StudentUpdate, Chat, Message
 from fastapi.security import OAuth2PasswordRequestForm
 from app.core.aunthefication import validate_token
 
@@ -118,8 +118,7 @@ async def login(
 
     if not data:
         raise HTTPException(status_code=400, detail="Incorrect email or password")
-    print("\n\n\n",data, "\n\n\n\n")
-    return {"access_token": data["token"], "token_type": "bearer", "username" : data["username"]}
+    return {"access_token": data["token"], "token_type": "bearer", "student_id" : data["student_id"]}
 
 
 @router.post(
@@ -133,3 +132,79 @@ async def logout(
     if not result:
         return "Failed to log out"
     return "Successfully logged out"
+
+
+@router.post(
+    "/message",
+    #dependencies=[Depends(validate_token)],
+)
+async def send_message(
+    message: Message
+):
+    message = await student_service.send_message(database=mongo_database, message=message)
+
+    if not message:
+        raise HTTPException(status_code=400, detail="Error while sending message")
+
+    return {"message" : message.text, "chat_id" : message.chat_id, "sender": message.sender_id, "created at" : message.created_at}
+
+
+@router.get(
+    "/chats",
+    #dependencies=[Depends(validate_token)],
+)
+async def get_chats(
+        access_token: str
+):
+    chats = await student_service.get_chats(database=postgres_database, access_token=access_token)
+
+    if not chats:
+        raise HTTPException(status_code=400, detail="Error while getting chats")
+
+    return chats
+
+
+@router.get(
+    "/messages",
+    #dependencies=[Depends(validate_token)],
+)
+async def get_messages(
+        chat_id: str
+):
+    messages = await student_service.get_messages(chat_id=chat_id)
+
+    if not messages:
+        raise HTTPException(status_code=400, detail="Error while getting messages")
+
+    return messages
+
+
+@router.get(
+    "/participants",
+    #dependencies=[Depends(validate_token)],
+)
+async def get_participants(
+        chat_id: str
+):
+    participants = await student_service.get_participants(database=postgres_database, chat_id=chat_id)
+
+    print(participants)
+    if not participants:
+        raise HTTPException(status_code=400, detail="Error while getting messages")
+
+    return participants
+
+
+@router.post(
+    "/chat",
+    #dependencies=[Depends(validate_token)],
+)
+async def create_chat(
+    chat : Chat
+):
+    result = await student_service.create_chat(chat=chat)
+
+    if not result:
+        raise HTTPException(status_code=400, detail="Error while getting chats")
+
+    return result

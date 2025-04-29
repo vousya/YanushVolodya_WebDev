@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="communication.css">
+    <title>Chat App</title>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>Chats</h2>
+        <div id="chat-list" class="chat-list">
+        </div>
+    </div>
+
+    <div class="chat-window">
+        <div id="chat-header" class="chat-header"></div>
+        <div class="messages">
+            <div class="message received">
+                <div class="profile-pic">
+                    <img src="https://i.pravatar.cc/40?img=1" alt="Profile">
+                </div>
+                <div class="message-content">Hello everyone!</div>
+            </div>
+
+            <div class="message sent">
+                <div class="profile-pic">
+                    <img src="https://i.pravatar.cc/40?img=2" alt="Profile">
+                </div>
+                <div class="message-content">Hi! How are you?</div>
+            </div>
+
+            <div class="message received">
+                <div class="profile-pic">
+                    <img src="https://i.pravatar.cc/40?img=3" alt="Profile">
+                </div>
+                <div class="message-content">All good! Let's start.</div>
+            </div>
+        </div>
+
+        <div class="message-input">
+            <input type="text" placeholder="Type a message...">
+            <button disabled>Send</button>
+        </div>
+    </div>
+
+    <script src="communication.js"></script>
+</body>
+</html>

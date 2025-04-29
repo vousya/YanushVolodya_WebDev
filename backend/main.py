@@ -1,8 +1,23 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1 import students
+from contextlib import asynccontextmanager
+from app.core.databases import mongo_database
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await mongo_database.init_beanie()
+    print("MongoDB connected and Beanie initialized.")
+
+    yield
+
+    await mongo_database.client.close()
+    print("MongoDB connection closed.")
+
+
+app = FastAPI(lifespan=lifespan)
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -11,5 +26,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 app.include_router(students.router)

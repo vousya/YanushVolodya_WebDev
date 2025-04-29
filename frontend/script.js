@@ -151,7 +151,7 @@ function add_row() {
             alert("⚠️ This student already exists. Please check the details and try again.");
         }
         if(response.status === 401){
-            window.location.href = "/index.html";
+            window.location.href = "/frontend/login/index.html";
         };
         if (!response.ok) {
             throw new Error("Failed to add student");
@@ -204,7 +204,7 @@ function open_remove_window(row) {
         })
         .then(response => {
             if(response.status === 401){
-                window.location.href = "/index.html";
+                window.location.href = "/frontend/login/index.html";
             };
             if (!response.ok) {
                 throw new Error("Failed to delete student");
@@ -319,7 +319,7 @@ function open_edit_window(row) {
             })
             .then(response => {
                 if(response.status === 401){
-                    window.location.href = "/index.html";
+                    window.location.href = "/frontend/login/index.html";
                 };
                 if (!response.ok) {
                     throw new Error("Failed to update student");
@@ -454,10 +454,36 @@ document.getElementById("logout-btn").addEventListener("click", async () => {
     console.log(result);
 
     sessionStorage.removeItem("access_token");
-    window.location.href = "/index.html"; 
+    window.location.href = "/frontend/login/index.html"; 
 });
 
-const profile_name = document.getElementById("profile-text");
-let username = sessionStorage.getItem("username");
-sessionStorage.removeItem("username");
-profile_name.textContent = username;
+async function loadStudentProfile() {
+    const profileName = document.getElementById("profile-text");
+    const studentId = sessionStorage.getItem("student_id");
+
+    try {
+        const token = sessionStorage.getItem("access_token");
+        const response = await fetch(`http://localhost:8000/students/${studentId}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result.name) {
+            profileName.textContent = result.name;
+        }
+    } catch (error) {
+        console.error("Error fetching student data:", error);
+    }
+}
+
+loadStudentProfile();
+
