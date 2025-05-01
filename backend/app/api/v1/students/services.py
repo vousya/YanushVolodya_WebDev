@@ -1,7 +1,7 @@
 from app.core.models import Student, Login, Message, Chat
 from sqlalchemy import select
 from app.core.aunthefication import hash_password
-from app.core.aunthefication import authenticate_user, create_access_token, get_email
+from app.core.aunthefication import authenticate_user, create_access_token, get_student_id
 from bson import ObjectId
 
 
@@ -126,42 +126,21 @@ class StudentService:
 
     @classmethod
     async def login_user(cls, email, password, database):
-        student_id = None
-        user = await authenticate_user(email=email, password=password)
-        if not user:
+        student_id = await authenticate_user(email=email, password=password)
+        if not student_id:
             return None
 
-        async for session in database.get_session():
-            async with session.begin():
-                result = await session.execute(select(Login)
-                        .where(Login.email == email)
-                )
-                student = result.scalar_one_or_none()
-                if not student:
-                    raise ValueError("Student not found")
-
-                student_id = student.student_id
-
-            await session.refresh(student)
-
-        access_token = create_access_token(data={"sub": email})
+        access_token = create_access_token(data={"student_id": student_id})
         data = {"token" : access_token, "student_id" : student_id}
         return data
 
     @classmethod
     async def logout_student(cls, token, database):
-        email = get_email(token)
+        student_id = get_student_id(token)
         async for session in database.get_session():
             async with session.begin():
-                result = await session.execute(select(Login)
-                        .where(Login.email == email)
-                )
-                student_login = result.scalar_one_or_none()
-                if not student_login:
-                    return None
-
                 result = await session.execute(select(Student)
-                        .where(Student.student_id == student_login.student_id)
+                        .where(Student.student_id == student_id)
                 )
                 student_student = result.scalar_one_or_none()
                 if not student_student:

@@ -2,7 +2,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from beanie import init_beanie
 from dotenv import load_dotenv
 import os
-from app.core.models import Chat, Message
+from app.core.models import all_models
 
 class MongoDatabase:
     def __init__(self):
@@ -24,6 +24,6 @@ class MongoDatabase:
         return db_name
 
     async def init_beanie(self):
-        await init_beanie(database=self.db, document_models=[Chat, Message])
+        await init_beanie(database=self.db, document_models=all_models)
 
 mongo_database = MongoDatabase()

@@ -10,7 +10,6 @@ from fastapi import HTTPException, Depends, status
 import hmac
 import hashlib
 
-
 load_dotenv(dotenv_path="app/core/.env")
 secret_key = os.getenv("SECRET_KEY")
 if not secret_key:
@@ -20,6 +19,7 @@ ALGORITHM = "HS256"
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
+
 def hash_password(password: str) -> str:
     return hmac.new(
         key=secret_key.encode(),
@@ -27,8 +27,10 @@ def hash_password(password: str) -> str:
         digestmod=hashlib.sha256
     ).hexdigest()
 
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return hash_password(plain_password) == hashed_password
+
 
 def create_access_token(data: dict):
     to_encode = data.copy()
@@ -36,18 +38,21 @@ def create_access_token(data: dict):
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, secret_key, algorithm=ALGORITHM)
 
+
 async def authenticate_user(email: str, password: str):
     async for session in postgres_database.get_session():
         result = await session.execute(select(Login).where(Login.email == email))
         user = result.scalar_one_or_none()
         if user and verify_password(plain_password=password, hashed_password=user.password):
-            return True
-    return False
+            return user.student_id
+        return None
 
-def get_email(token):
+
+def get_student_id(token):
     payload = jwt.decode(token, secret_key, algorithms=[ALGORITHM])
-    email: str = payload.get("sub")
-    return email
+    student_id: str = payload.get("student_id")
+    return student_id
+
 
 async def validate_token(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
@@ -56,8 +61,8 @@ async def validate_token(token: str = Depends(oauth2_scheme)):
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        email: str = get_email(token)
-        if email is None:
+        student_id: str = get_student_id(token)
+        if student_id is None:
             raise credentials_exception
     except JWTError:
         raise credentials_exception
