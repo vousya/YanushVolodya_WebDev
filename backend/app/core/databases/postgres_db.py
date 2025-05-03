@@ -11,7 +11,7 @@ class Database:
         database_url = os.getenv("DATABASE_URL")
         if not database_url:
             raise ValueError("DATABASE_URL is not found in the .env file.")
-        engine = create_async_engine(database_url, echo=True)
+        engine = create_async_engine(database_url, echo=False)
 
         return engine
 

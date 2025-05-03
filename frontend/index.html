@@ -7,6 +7,8 @@
     <link rel="stylesheet" type="text/css" href="header.css">
     <link rel="stylesheet" type="text/css" href="navigation.css">
     <link rel="stylesheet" type="text/css" href="pagination.css">
+    <link rel="stylesheet" type="text/css" href="login/login.css">
+
     <!-- <link rel="manifest" href="manifest.json" /> -->
     <title>Students</title>
 
@@ -151,10 +153,27 @@
                 </div>
             </div>
         </div>
+        <div id="login">
+            <div id="login-menu">
+                <form id="loginForm">
+                    <label class="login-label">Email:
+                        <input type="email" class="login-input" name="email" id="email" required />
+                    </label>
+                    <br /><br />
+                    <label class="login-label">Password:
+                        <input type="password" class="login-input" name="password" id="password" required />
+                    </label>
+                    <br /><br />
+                    <button class="login-btn" type="submit">Login</button>
+                  </form>
+                
+                  <p id="error" style="color: red;"></p>
+            </div>
+        </div>
     </div>    
 
-    <script src="script.js"></script>
     <script src="pagination.js"></script>
+    <script src="script.js"></script>
     <!-- <script src="init_sw.js"></script> -->
 </body>
 </html>

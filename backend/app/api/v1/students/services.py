@@ -1,7 +1,8 @@
 from app.core.models import Student, Login, Message, Chat
+from app.core.aunthefication import get_student_id, hash_password
+from app.core.websockets import websockets_helper
+
 from sqlalchemy import select
-from app.core.aunthefication import hash_password
-from app.core.aunthefication import authenticate_user, create_access_token, get_student_id
 from bson import ObjectId
 
 
@@ -39,8 +40,8 @@ class StudentService:
         async for session in database.get_session():
             async with session.begin():
                 result = await session.execute(select(Student)
-                        .where(Student.name == student_db.name)
-                        .where(Student.group_name == student_db.group_name))
+                                               .where(Student.name == student_db.name)
+                                               .where(Student.group_name == student_db.group_name))
                 student = result.scalar_one_or_none()
                 if student:
                     return None
@@ -49,15 +50,15 @@ class StudentService:
 
         async for session in database.get_session():
             result = await session.execute(select(Student)
-                    .where(Student.student_id == student_db.student_id))
+                                           .where(Student.student_id == student_db.student_id))
             student = result.scalar_one_or_none()
             post = generate_corporate_post(student.name, student.group_name)
             password = hash_password(str(student.birthday))
 
             result = await session.execute(select(Login)
-                    .where(Login.email == post)
-                    .where(Login.password == password)
-            )
+                                           .where(Login.email == post)
+                                           .where(Login.password == password)
+                                           )
             existing = result.scalar_one_or_none()
 
             if not existing:
@@ -114,8 +115,8 @@ class StudentService:
         async for session in database.get_session():
             async with session.begin():
                 result = await session.execute(select(Student)
-                        .where(Student.student_id == student_id)
-                )
+                                               .where(Student.student_id == student_id)
+                                               )
                 student = result.scalars().first()
 
                 if not student:
@@ -124,32 +125,32 @@ class StudentService:
                 await session.delete(student)
                 return student
 
-    @classmethod
-    async def login_user(cls, email, password, database):
-        student_id = await authenticate_user(email=email, password=password)
-        if not student_id:
-            return None
-
-        access_token = create_access_token(data={"student_id": student_id})
-        data = {"token" : access_token, "student_id" : student_id}
-        return data
-
-    @classmethod
-    async def logout_student(cls, token, database):
-        student_id = get_student_id(token)
-        async for session in database.get_session():
-            async with session.begin():
-                result = await session.execute(select(Student)
-                        .where(Student.student_id == student_id)
-                )
-                student_student = result.scalar_one_or_none()
-                if not student_student:
-                    return None
-
-                student_student.status = False
-
-            await session.refresh(student_student)
-        return True
+    # @classmethod
+    # async def login_user(cls, email, password, database):
+    #     student_id = await authenticate_user(email=email, password=password)
+    #     if not student_id:
+    #         return None
+    #
+    #     access_token = create_access_token(data={"student_id": student_id})
+    #     data = {"token": access_token, "student_id": student_id}
+    #     return data
+    #
+    # @classmethod
+    # async def logout_student(cls, token, database):
+    #     student_id = get_student_id(token)
+    #     async for session in database.get_session():
+    #         async with session.begin():
+    #             result = await session.execute(select(Student)
+    #                                            .where(Student.student_id == student_id)
+    #                                            )
+    #             student_student = result.scalar_one_or_none()
+    #             if not student_student:
+    #                 return None
+    #
+    #             student_student.status = False
+    #
+    #         await session.refresh(student_student)
+    #     return True
 
     @classmethod
     async def send_message(cls, database, message):
@@ -167,22 +168,11 @@ class StudentService:
 
     @classmethod
     async def get_chats(cls, database, access_token):
-        email = get_email(access_token)
-        student_id = ""
-        async for session in database.get_session():
-            async with session.begin():
-                result = await session.execute(select(Login)
-                        .where(Login.email == email)
-                )
-                student_login = result.scalar_one_or_none()
-                if not student_login:
-                    return None
-
-                student_id = str(student_login.student_id)
-
+        student_id = str(get_student_id(access_token))
         print("student_id:", student_id, type(student_id))
-        chats = await Chat.find(Chat.participants == student_id).to_list()
+        chats = await Chat.find({"participants": student_id}).to_list()
 
+        print("chats:", chats)
         if not chats:
             return None
 
@@ -209,8 +199,8 @@ class StudentService:
             async with session.begin():
                 for participant in chat.participants:
                     result = await session.execute(select(Student)
-                            .where(Student.student_id == int(participant))
-                    )
+                                                   .where(Student.student_id == int(participant))
+                                                   )
                     student = result.scalar_one_or_none()
                     if student:
                         participants[student.student_id] = student.name
@@ -231,5 +221,22 @@ class StudentService:
 
         return new_chat
 
+    @classmethod
+    async def login(cls, websocket):
+        result = await websockets_helper.login(websocket)
+
+        if not result:
+            return None
+
+        return result
+
+    @classmethod
+    async def connect(cls, websocket):
+        result = await websockets_helper.connect(websocket)
+
+        if not result:
+            return None
+
+        return result
 
 student_service = StudentService()

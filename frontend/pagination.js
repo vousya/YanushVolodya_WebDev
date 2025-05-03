@@ -142,7 +142,3 @@ function renderPagination() {
 
   pagination.appendChild(createButton('→', currentPage + 1, currentPage === totalPages));
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-  fetchStudents();
-});

@@ -39,7 +39,7 @@ def create_access_token(data: dict):
     return jwt.encode(to_encode, secret_key, algorithm=ALGORITHM)
 
 
-async def authenticate_user(email: str, password: str):
+async def authenticate_user(email: str, password: str) -> int | None:
     async for session in postgres_database.get_session():
         result = await session.execute(select(Login).where(Login.email == email))
         user = result.scalar_one_or_none()

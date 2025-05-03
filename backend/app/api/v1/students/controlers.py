@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.core.schemas import StudentResponse, StudentsResponse, StudentCreate, StudentUpdate, Chat, Message
 from fastapi.security import OAuth2PasswordRequestForm
 from app.core.aunthefication import validate_token
-
+from fastapi import WebSocket
 
 router = APIRouter(tags=["Students"])
 
@@ -52,7 +52,7 @@ async def get_student(
     response_model=StudentResponse
 )
 async def create_student(
-    student: StudentCreate
+        student: StudentCreate
 ):
     student_db = await student_service.create_student(database=postgres_database, student=student)
 
@@ -75,10 +75,11 @@ async def create_student(
     response_model=StudentResponse
 )
 async def edit_student(
-    student_id: int,
-    student_update: StudentUpdate
+        student_id: int,
+        student_update: StudentUpdate
 ):
-    student = await student_service.edit_student(database=postgres_database, student_update=student_update, student_id=student_id)
+    student = await student_service.edit_student(database=postgres_database, student_update=student_update,
+                                                 student_id=student_id)
     return StudentResponse(
         student_id=student.student_id,
         group_name=student.group_name,
@@ -95,7 +96,7 @@ async def edit_student(
     response_model=StudentResponse
 )
 async def delete_student(
-    student_id: int,
+        student_id: int,
 ):
     student = await student_service.delete_student(database=postgres_database, student_id=student_id)
     return StudentResponse(
@@ -114,11 +115,12 @@ async def delete_student(
 async def login(
         form_data: OAuth2PasswordRequestForm = Depends()
 ):
-    data = await student_service.login_user(database=postgres_database, email=form_data.username, password=form_data.password)
+    data = await student_service.login_user(database=postgres_database, email=form_data.username,
+                                            password=form_data.password)
 
     if not data:
         raise HTTPException(status_code=400, detail="Incorrect email or password")
-    return {"access_token": data["token"], "token_type": "bearer", "student_id" : data["student_id"]}
+    return {"access_token": data["token"], "token_type": "bearer", "student_id": data["student_id"]}
 
 
 @router.post(
@@ -136,22 +138,23 @@ async def logout(
 
 @router.post(
     "/message",
-    #dependencies=[Depends(validate_token)],
+    # dependencies=[Depends(validate_token)],
 )
 async def send_message(
-    message: Message
+        message: Message
 ):
     message = await student_service.send_message(database=mongo_database, message=message)
 
     if not message:
         raise HTTPException(status_code=400, detail="Error while sending message")
 
-    return {"message" : message.text, "chat_id" : message.chat_id, "sender": message.sender_id, "created at" : message.created_at}
+    return {"message": message.text, "chat_id": message.chat_id, "sender": message.sender_id,
+            "created at": message.created_at}
 
 
 @router.get(
     "/chats",
-    #dependencies=[Depends(validate_token)],
+    # dependencies=[Depends(validate_token)],
 )
 async def get_chats(
         access_token: str
@@ -166,7 +169,7 @@ async def get_chats(
 
 @router.get(
     "/messages",
-    #dependencies=[Depends(validate_token)],
+    # dependencies=[Depends(validate_token)],
 )
 async def get_messages(
         chat_id: str
@@ -181,7 +184,7 @@ async def get_messages(
 
 @router.get(
     "/participants",
-    #dependencies=[Depends(validate_token)],
+    # dependencies=[Depends(validate_token)],
 )
 async def get_participants(
         chat_id: str
@@ -197,10 +200,10 @@ async def get_participants(
 
 @router.post(
     "/chat",
-    #dependencies=[Depends(validate_token)],
+    # dependencies=[Depends(validate_token)],
 )
 async def create_chat(
-    chat : Chat
+        chat: Chat
 ):
     result = await student_service.create_chat(chat=chat)
 
@@ -208,3 +211,21 @@ async def create_chat(
         raise HTTPException(status_code=400, detail="Error while getting chats")
 
     return result
+
+
+@router.websocket(
+    "/ws/login"
+)
+async def websocket_login(
+        websocket: WebSocket
+):
+    await student_service.login(websocket)
+
+
+@router.websocket(
+    "/ws/connect"
+)
+async def websocket_connect(
+        websocket: WebSocket
+):
+    await student_service.connect(websocket)
