@@ -1,10 +1,10 @@
 from app.api.v1.students import student_service
 from app.core.databases import postgres_database, mongo_database
-from fastapi import APIRouter, Depends, HTTPException
 from app.core.schemas import StudentResponse, StudentsResponse, StudentCreate, StudentUpdate, Chat, Message
-from fastapi.security import OAuth2PasswordRequestForm
 from app.core.aunthefication import validate_token
-from fastapi import WebSocket
+
+from fastapi import APIRouter, Depends, HTTPException, WebSocket
+from fastapi.security import OAuth2PasswordRequestForm
 
 router = APIRouter(tags=["Students"])
 
@@ -107,33 +107,6 @@ async def delete_student(
         birthday=student.birthday,
         status=student.status
     )
-
-
-@router.post(
-    "/token",
-)
-async def login(
-        form_data: OAuth2PasswordRequestForm = Depends()
-):
-    data = await student_service.login_user(database=postgres_database, email=form_data.username,
-                                            password=form_data.password)
-
-    if not data:
-        raise HTTPException(status_code=400, detail="Incorrect email or password")
-    return {"access_token": data["token"], "token_type": "bearer", "student_id": data["student_id"]}
-
-
-@router.post(
-    "/logout",
-    dependencies=[Depends(validate_token)],
-)
-async def logout(
-        token: str
-):
-    result = await student_service.logout_student(database=postgres_database, token=token)
-    if not result:
-        return "Failed to log out"
-    return "Successfully logged out"
 
 
 @router.post(

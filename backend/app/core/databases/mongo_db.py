@@ -1,8 +1,10 @@
+from app.core.models import all_models
+
 from motor.motor_asyncio import AsyncIOMotorClient
 from beanie import init_beanie
+
 from dotenv import load_dotenv
 import os
-from app.core.models import all_models
 
 class MongoDatabase:
     def __init__(self):

@@ -1,6 +1,8 @@
 from fastapi import WebSocket, WebSocketDisconnect
-import json
+
 from app.core.aunthefication import authenticate_user, create_access_token, get_student_id
+
+import json
 
 
 class WebSocketsHelper:
@@ -20,10 +22,7 @@ class WebSocketsHelper:
             )
 
             if not student_id:
-                try:
-                    await websocket.send_text("error")
-                except RuntimeError:
-                    pass
+                await websocket.send_text("error")
                 await websocket.close()
                 return
 
@@ -41,10 +40,6 @@ class WebSocketsHelper:
                     print(f"{student_id} disconnected")
                     cls.disconnect(str(student_id))
                     break
-                except Exception as e:
-                    print(f"Error on socket {student_id}: {e}")
-                    break
-
         except WebSocketDisconnect:
             if student_id:
                 cls.disconnect(str(student_id))

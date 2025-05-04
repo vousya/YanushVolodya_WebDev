@@ -1,4 +1,3 @@
-import datetime
 import re
 from pydantic import BaseModel, field_validator
 from datetime import date
@@ -33,7 +32,7 @@ class StudentCreate(BaseModel):
     @field_validator('birthday')
     @classmethod
     def validate_birthday(cls, date):
-        current_year = datetime.date.today().year
+        current_year = date.today().year
         too_old = current_year - 80
         too_young = current_year - 17
         if (date.year > too_young) or (date.year < too_old):
@@ -74,7 +73,7 @@ class StudentUpdate(BaseModel):
     @field_validator('birthday')
     @classmethod
     def validate_birthday(cls, date):
-        current_year = datetime.date.today().year
+        current_year = date.today().year
         too_old = current_year - 80
         too_young = current_year - 17
         if (date.year > too_young) or (date.year < too_old):

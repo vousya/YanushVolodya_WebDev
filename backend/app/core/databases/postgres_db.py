@@ -1,8 +1,9 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+
 from dotenv import load_dotenv
 import os
 
-class Database:
+class PostgresDatabase:
     def __init__(self):
         self.engine = self.create_engine()
 
@@ -20,4 +21,4 @@ class Database:
             yield session
 
 
-postgres_database = Database()
+postgres_database = PostgresDatabase()

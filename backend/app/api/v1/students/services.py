@@ -125,33 +125,6 @@ class StudentService:
                 await session.delete(student)
                 return student
 
-    # @classmethod
-    # async def login_user(cls, email, password, database):
-    #     student_id = await authenticate_user(email=email, password=password)
-    #     if not student_id:
-    #         return None
-    #
-    #     access_token = create_access_token(data={"student_id": student_id})
-    #     data = {"token": access_token, "student_id": student_id}
-    #     return data
-    #
-    # @classmethod
-    # async def logout_student(cls, token, database):
-    #     student_id = get_student_id(token)
-    #     async for session in database.get_session():
-    #         async with session.begin():
-    #             result = await session.execute(select(Student)
-    #                                            .where(Student.student_id == student_id)
-    #                                            )
-    #             student_student = result.scalar_one_or_none()
-    #             if not student_student:
-    #                 return None
-    #
-    #             student_student.status = False
-    #
-    #         await session.refresh(student_student)
-    #     return True
-
     @classmethod
     async def send_message(cls, database, message):
         message_db = Message(
@@ -238,5 +211,6 @@ class StudentService:
             return None
 
         return result
+
 
 student_service = StudentService()

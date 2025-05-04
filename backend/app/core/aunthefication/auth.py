@@ -1,12 +1,17 @@
+from fastapi import HTTPException, Depends, status
+from fastapi.security import OAuth2PasswordBearer
+
+from app.core.databases import postgres_database
+from app.core.models import Login
+
 from dotenv import load_dotenv
 import os
+
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
-from app.core.databases import postgres_database
+
 from sqlalchemy import select
-from app.core.models import Login
-from fastapi.security import OAuth2PasswordBearer
-from fastapi import HTTPException, Depends, status
+
 import hmac
 import hashlib
 
