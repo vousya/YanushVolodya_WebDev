@@ -1,3 +1,169 @@
+const studentsPerPage = 4;
+let currentPage = 1;
+let students = [];
+
+async function fetchStudents() {
+  const token = sessionStorage.getItem("access_token");
+  console.log("token = ", token);
+  const response = await fetch("http://127.0.0.1:8000/students", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    });
+  const data = await response.json();
+  if(response.status === 401){
+    window.location.href = "/index.html";
+  };
+  console.log("Fetch Student:", data);
+  students = data.students;
+  renderTable();
+  renderPagination();
+}
+
+function renderTable() {
+  if((currentPage-1) * studentsPerPage >= students.length){
+    currentPage--;
+  }
+  const start = (currentPage - 1) * studentsPerPage;
+  const pageStudents = students.slice(start, start + studentsPerPage);
+  const tbody = document.querySelector('#student-table tbody');
+  tbody.innerHTML = pageStudents.map(student => `
+    <tr>
+      <td>
+          <label for="checkbox-${student.student_id}" class="visually-hidden">Select ${student.name}</label>
+          <input type="checkbox" id="checkbox-${student.student_id}" class="checkbox">
+          <span class="student-id">${student.student_id}</span>
+      </td>
+      <td>${student.group_name}</td>
+      <td>
+        <span class="full-name">${student.name}</span>
+        <span class="initials">${student.name.split(" ").map(word => word[0]).join(" ").toUpperCase()}</span>
+      </td>
+      <td>${student.gender}</td>
+      <td>${student.birthday.split("-").reverse().join(".")}</td>
+      <td>
+        <img class="status" alt="status-${student.status ? 'active' : 'inactive'}" 
+        src="resources/status-${student.status ? 'active' : 'inactive'}.svg">
+      </td>
+      <td>
+        <button class="edit-btn">
+          <img src="resources/edit.svg" alt="edit">
+        </button>
+        <button class="remove-btn">
+          <img src="resources/remove.svg" alt="remove">
+        </button>
+      </td>
+    </tr>
+  `).join('');
+  const rows = tbody.querySelectorAll('tr');
+  rows.forEach(row => {
+    const removeBtn = row.querySelector(".remove-btn");
+    const editBtn = row.querySelector(".edit-btn");
+    const checkbox = row.querySelector('#student-table input[type="checkbox"]');
+
+    removeBtn.addEventListener("click", function() {
+      if (row.cells[0].querySelector("input").checked) {
+        open_remove_window(row);
+      }
+    });
+
+    editBtn.addEventListener("click", function() {
+      if (row.cells[0].querySelector("input").checked) {
+        open_edit_window(row);
+      }
+    });
+
+    checkbox.addEventListener('change', update_main_checkbox);
+    
+  });
+}
+
+function renderPagination() {
+  let main_checkbox = document.getElementById("main-checkbox");
+  if(main_checkbox){
+    main_checkbox.checked = false;
+  }
+  const totalPages = Math.ceil(students.length / studentsPerPage);
+  const pagination = document.getElementById('pagination');
+  pagination.innerHTML = '';
+
+  const createButton = (text, page, disabled = false, isActive = false) => {
+    const btn = document.createElement('button');
+    btn.textContent = text;
+    btn.disabled = disabled;
+    if (isActive) btn.classList.add('active');
+    btn.classList.add('pagination-btn');
+    btn.addEventListener('click', () => {
+      currentPage = page;
+      renderTable();
+      renderPagination();
+    });
+    return btn;
+  };
+
+  pagination.appendChild(createButton('←', currentPage - 1, currentPage === 1));
+
+  const range = 1;
+
+  const pages = [];
+
+  const startPage = Math.max(1, currentPage - range);
+  const endPage = Math.min(totalPages, currentPage + range);
+
+  if (startPage > 1) {
+    pages.push(1);
+    if (startPage > 2) {
+      pages.push('...');
+    }
+  }
+
+  for (let i = startPage; i <= endPage; i++) {
+    pages.push(i);
+  }
+
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) {
+      pages.push('...');
+    }
+    pages.push(totalPages);
+  }
+
+  pages.forEach(p => {
+    if (p === '...') {
+      const span = document.createElement('span');
+      span.textContent = '...';
+      span.classList.add('dots');
+      pagination.appendChild(span);
+    } else {
+      pagination.appendChild(createButton(p, p, false, p === currentPage));
+    }
+  });
+
+  pagination.appendChild(createButton('→', currentPage + 1, currentPage === totalPages));
+}
+
+let access_token = sessionStorage.getItem("access_token");
+if (access_token){
+    document.getElementById("login").style.display = "none";
+
+    loadStudentProfile();
+    
+    const socket = new WebSocket(`ws://localhost:8000/ws/connect`);
+    
+    const message = {
+        access_token: access_token
+    };
+    
+    socket.onopen = () =>{
+        socket.send(JSON.stringify(message));
+    }
+
+    socket.onmessage = function (event) {
+        fetchStudents();
+    };
+}
+
 const add_btn = document.getElementById("add-button");
 if (add_btn) {
     add_btn.addEventListener("click", open_add_window);
@@ -372,6 +538,121 @@ function update_main_checkbox() {
     main_checkbox.checked = all_checked;
 }
 
+async function load_chats() {
+    const studentId = sessionStorage.getItem("student_id");
+
+    try {
+        const token = sessionStorage.getItem("access_token");
+        const response = await fetch(`http://localhost:8000/chats?access_token=${token}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Accept": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const chats = await response.json();
+        console.log(chats);
+        
+        const chatListContainer = document.getElementById('chat-list');
+        
+        chatListContainer.innerHTML = '';
+
+        chats.forEach(chat => {
+            const chatItem = document.createElement('div');
+            chatItem.classList.add('chat-item');
+            
+            chatItem.textContent = chat.name;
+            
+            chatItem.setAttribute('data-chat-id', chat._id);
+
+            chatListContainer.appendChild(chatItem);
+        });
+    } catch (error) {
+        console.error("Error fetching student data:", error);
+    }
+}
+
+async function load_messages(chat) {
+    const token = sessionStorage.getItem("access_token");
+    const chat_id = chat.getAttribute("data-chat-id");
+
+    let response = await fetch(`http://127.0.0.1:8000/participants?chat_id=${chat_id}`, {
+        method: "GET",
+        headers: {
+            "Accept": "application/json",
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const participants = await response.json()
+
+    response = await fetch(`http://127.0.0.1:8000/messages?chat_id=${chat_id}`, {
+        method: "GET",
+        headers: {
+            "Accept": "application/json",
+        },
+    });
+    
+    const header = document.getElementById("chat-header");
+    header.textContent = chat.textContent;
+
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const messages = await response.json();
+    console.log("Messages:", messages);
+    const messagesContainer = document.querySelector(".message-container");
+    console.log(messagesContainer);
+    const student_id = sessionStorage.getItem("student_id");
+
+    messagesContainer.innerHTML = '';
+
+    messages.forEach(msg => {
+        const messageDiv = document.createElement("div");
+        messageDiv.classList.add("message");
+    
+        if (msg.sender_id === student_id) {
+            messageDiv.classList.add("sent");
+        } else {
+            messageDiv.classList.add("received");
+        }
+    
+        const usernameDiv = document.createElement("div");
+        usernameDiv.classList.add("username");
+        let username = participants[msg.sender_id];
+        console.log(username);
+        usernameDiv.textContent = username;
+    
+        const contentDiv = document.createElement("div");
+        contentDiv.classList.add("message-content");
+        contentDiv.textContent = msg.text;
+    
+        messageDiv.appendChild(usernameDiv);
+        messageDiv.appendChild(contentDiv);
+    
+        messagesContainer.appendChild(messageDiv);
+    });    
+}
+
+async function load_page(){
+    await load_chats();
+
+    const current_chat = document.querySelector(".chat-item");
+
+    let messages = await load_messages(current_chat);
+    console.log(messages);
+}
+
+
 document.getElementById("bell").addEventListener('click', bell_animation);
 
 function bell_animation(event) {
@@ -380,7 +661,12 @@ function bell_animation(event) {
     bell.classList.remove('swinging');
     void bell.offsetWidth;
     bell.classList.add('swinging');
-    window.location.href = "/frontend/communication/communication.html";
+    let chats = document.getElementById("communication");
+    chats.style.display = "flex";
+    document.getElementById("home-logo").addEventListener("click", () =>{
+        chats.style.display = "none";
+    })
+    load_page();
 }
 
 let bell = document.getElementById("bell");
@@ -485,24 +771,6 @@ async function loadStudentProfile() {
     }
 }
 
-let access_token = sessionStorage.getItem("access_token");
-if (access_token){
-    document.getElementById("login").style.display = "none";
-
-    loadStudentProfile();
-    fetchStudents();
-
-    const socket = new WebSocket(`ws://localhost:8000/ws/connect`);
-    
-    const message = {
-        access_token: access_token
-    };
-
-    socket.onopen = () =>{
-        socket.send(JSON.stringify(message));
-    }
-}
-
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -537,3 +805,69 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     };
 });
 
+document.getElementById("send-message-btn").addEventListener("click", () => {
+    let input = document.getElementById("input-message");
+    let message_text = input.value;
+    console.log("text:", message_text);
+    input.value = "";
+
+    const current_chat = document.querySelector(".chat-item");
+    const chat_id = current_chat.getAttribute("data-chat-id");
+    const sender_id = sessionStorage.getItem("student_id");
+
+    const today = new Date();
+    const yyyy_mm_dd = today.getFullYear() + "-" + 
+        String(today.getMonth() + 1).padStart(2, '0') + "-" +
+        String(today.getDate()).padStart(2, '0');
+
+
+    const messagesContainer = document.querySelector(".message-container");
+
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add("message");
+
+    messageDiv.classList.add("sent");
+
+    const usernameDiv = document.createElement("div");
+    usernameDiv.classList.add("username");
+    let username = document.getElementById("profile-text").textContent;
+    usernameDiv.textContent = username;
+
+    const contentDiv = document.createElement("div");
+    contentDiv.classList.add("message-content");
+    contentDiv.textContent = message_text;
+
+    messageDiv.appendChild(usernameDiv);
+    messageDiv.appendChild(contentDiv);
+
+    messagesContainer.appendChild(messageDiv);
+
+    const message = {
+        text: message_text,
+        sender_id: sender_id,
+        chat_id: chat_id,
+        created_at: yyyy_mm_dd
+    }
+
+    console.log("message:", message);
+    fetch(`http://localhost:8000/message`, {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(message)
+    })
+    .then(response => {
+    if (!response.ok) {
+        throw new Error("Network response was not ok");
+    }
+    })
+    .then(data => {
+    console.log("Message sent successfully:", data);
+    })
+    .catch(error => {
+    console.error("Failed to send message:", error);
+    });
+
+
+})

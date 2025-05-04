@@ -1,9 +1,34 @@
-body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f4f4f4;
+.communication {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    z-index: 1000;
+}
+
+.sidebar-chat-header {
     display: flex;
-    height: 100vh;
+    flex-direction: row;
+    width: 100%;
+    padding: 15px;
+    background-color: #1a252f;
+}
+
+.sidebar-home {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.sidebar-home a {
+    flex: 1;
+}
+
+.sidebar-home span {
+    flex: 3;
+    font-size: 40px;
 }
 
 .sidebar {
@@ -45,17 +70,22 @@ body {
     display: flex;
     flex-direction: column;
     background: white;
+    height: 100%;
 }
 
 .chat-header {
+    height: 85px;
     padding: 20px;
     background: #3498db;
     color: white;
     font-size: 20px;
     font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.messages {
+.message-container {
     flex-grow: 1;
     padding: 20px;
     overflow-y: auto;
@@ -87,7 +117,7 @@ body {
     border-radius: 50%;
     overflow: hidden;
     background: #ccc;
-    margin: 0 10px;
+    margin: 0 10px 10px 0;
 }
 
 .message .profile-pic img {
@@ -107,11 +137,19 @@ body {
     background: #d1f5d3;
 }
 
+.message .username {
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: left;
+}
+
 .message-input {
     display: flex;
     padding: 15px;
     background: #eee;
     border-top: 1px solid #ccc;
+    margin-top: auto;
 }
 
 .message-input input {
@@ -136,11 +174,4 @@ body {
 
 .message-input button:hover {
     background: #2980b9;
-}
-
-.username {
-    font-size: 12px;
-    font-weight: bold;
-    margin-bottom: 5px;
-    text-align: center;
 }

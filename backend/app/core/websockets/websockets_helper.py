@@ -1,15 +1,33 @@
 from fastapi import WebSocket, WebSocketDisconnect
 
 from app.core.aunthefication import authenticate_user, create_access_token, get_student_id
+from app.core.models import Student
 
 import json
+from sqlalchemy import select
+
+
+async def update_student_status(database, student_id : int, status : bool):
+    async for session in database.get_session():
+        async with session.begin():
+            result = await session.execute(
+                select(Student).where(Student.student_id == student_id)
+            )
+            student = result.scalars().first()
+
+            if not student:
+                raise ValueError("Student not found")
+
+            student.status = status
+
+        await session.refresh(student)
 
 
 class WebSocketsHelper:
     active_connections: dict[str, WebSocket] = {}
 
     @classmethod
-    async def login(cls, websocket: WebSocket):
+    async def login(cls, websocket: WebSocket, database):
         student_id = None
         try:
             await websocket.accept()
@@ -28,6 +46,8 @@ class WebSocketsHelper:
 
             cls.active_connections[str(student_id)] = websocket
 
+            await update_student_status(database=database, student_id=student_id, status=True)
+
             access_token = create_access_token(data={"student_id": student_id})
             response = {"access_token": access_token, "student_id": student_id}
             await websocket.send_text(json.dumps(response))
@@ -37,18 +57,17 @@ class WebSocketsHelper:
                     data = await websocket.receive_text()
                     print(f"Received from {student_id}: {data}")
                 except WebSocketDisconnect:
-                    print(f"{student_id} disconnected")
-                    cls.disconnect(str(student_id))
+                    await cls.disconnect(database=database, student_id=str(student_id))
                     break
         except WebSocketDisconnect:
             if student_id:
-                cls.disconnect(str(student_id))
-                print(f"{student_id} disconnected")
+                await cls.disconnect(database=database, student_id=str(student_id))
             else:
                 print("Disconnected before auth")
 
     @classmethod
-    async def connect(cls, websocket: WebSocket):
+    async def connect(cls, websocket: WebSocket, database):
+        student_id = None
         try:
             await websocket.accept()
             data = await websocket.receive_text()
@@ -59,37 +78,35 @@ class WebSocketsHelper:
             )
 
             if not student_id:
-                try:
-                    await websocket.send_text("error")
-                except RuntimeError:
-                    pass
+                await websocket.send_text("error")
                 await websocket.close()
                 return
 
             cls.active_connections[str(student_id)] = websocket
+
+            await update_student_status(database=database, student_id=student_id, status=True)
+
+            await websocket.send_text("all good")
 
             while True:
                 try:
                     data = await websocket.receive_text()
                     print(f"Received from {student_id}: {data}")
                 except WebSocketDisconnect:
-                    print(f"{student_id} disconnected")
-                    cls.disconnect(str(student_id))
+                    await cls.disconnect(database=database, student_id=str(student_id))
                     break
-                except Exception as e:
-                    print(f"Error on socket {student_id}: {e}")
-                    break
-
         except WebSocketDisconnect:
             if student_id:
-                cls.disconnect(str(student_id))
-                print(f"{student_id} disconnected")
+                await cls.disconnect(database=database, student_id=str(student_id))
             else:
                 print("Disconnected before auth")
 
     @classmethod
-    def disconnect(cls, student_id: str):
+    async def disconnect(cls, database, student_id: str):
+        await update_student_status(database=database, student_id=int(student_id), status=False)
         cls.active_connections.pop(student_id, None)
+        print(f"{student_id} disconnected")
+
 
     def is_active(self, user_id: str) -> bool:
         return user_id in self.active_connections

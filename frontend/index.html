@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="navigation.css">
     <link rel="stylesheet" type="text/css" href="pagination.css">
     <link rel="stylesheet" type="text/css" href="login/login.css">
+    <link rel="stylesheet" type="text/css" href="communication/communication.css">
 
     <!-- <link rel="manifest" href="manifest.json" /> -->
     <title>Students</title>
@@ -153,6 +154,7 @@
                 </div>
             </div>
         </div>
+
         <div id="login">
             <div id="login-menu">
                 <form id="loginForm">
@@ -170,9 +172,36 @@
                   <p id="error" style="color: red;"></p>
             </div>
         </div>
+
+        <div id="communication" class="communication">
+            <div class="sidebar">
+                <div class="sidebar-chat-header">
+                    <div class="sidebar-home">
+                        <a id="home-logo">
+                            <img src="resources/home.svg" alt="home" width="50" height="50">
+                        </a>
+                        <span>Chats</span>
+                    </div>
+                </div>
+                <div id="chat-list" class="chat-list">
+                    
+                </div>
+            </div>
+        
+            <div class="chat-window">
+                <div id="chat-header" class="chat-header"></div>
+                <div class="message-container">
+                
+                </div>
+        
+                <div class="message-input">
+                    <input type="text" id="input-message" placeholder="Type a message...">
+                    <button id="send-message-btn">Send</button>
+                </div>
+            </div>
+        </div>
     </div>    
 
-    <script src="pagination.js"></script>
     <script src="script.js"></script>
     <!-- <script src="init_sw.js"></script> -->
 </body>

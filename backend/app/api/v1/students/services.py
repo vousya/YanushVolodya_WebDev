@@ -195,8 +195,8 @@ class StudentService:
         return new_chat
 
     @classmethod
-    async def login(cls, websocket):
-        result = await websockets_helper.login(websocket)
+    async def login(cls, websocket, database):
+        result = await websockets_helper.login(websocket=websocket, database=database)
 
         if not result:
             return None
@@ -204,8 +204,8 @@ class StudentService:
         return result
 
     @classmethod
-    async def connect(cls, websocket):
-        result = await websockets_helper.connect(websocket)
+    async def connect(cls, websocket, database):
+        result = await websockets_helper.connect(websocket=websocket, database=database)
 
         if not result:
             return None

@@ -116,6 +116,7 @@ async def delete_student(
 async def send_message(
         message: Message
 ):
+    print(message)
     message = await student_service.send_message(database=mongo_database, message=message)
 
     if not message:
@@ -123,6 +124,36 @@ async def send_message(
 
     return {"message": message.text, "chat_id": message.chat_id, "sender": message.sender_id,
             "created at": message.created_at}
+
+
+@router.get(
+    "/messages",
+    # dependencies=[Depends(validate_token)],
+)
+async def get_messages(
+        chat_id: str
+):
+    messages = await student_service.get_messages(chat_id=chat_id)
+
+    if not messages:
+        raise HTTPException(status_code=400, detail="Error while getting messages")
+
+    return messages
+
+
+@router.post(
+    "/chat",
+    # dependencies=[Depends(validate_token)],
+)
+async def create_chat(
+        chat: Chat
+):
+    result = await student_service.create_chat(chat=chat)
+
+    if not result:
+        raise HTTPException(status_code=400, detail="Error while getting chats")
+
+    return result
 
 
 @router.get(
@@ -141,21 +172,6 @@ async def get_chats(
 
 
 @router.get(
-    "/messages",
-    # dependencies=[Depends(validate_token)],
-)
-async def get_messages(
-        chat_id: str
-):
-    messages = await student_service.get_messages(chat_id=chat_id)
-
-    if not messages:
-        raise HTTPException(status_code=400, detail="Error while getting messages")
-
-    return messages
-
-
-@router.get(
     "/participants",
     # dependencies=[Depends(validate_token)],
 )
@@ -171,28 +187,13 @@ async def get_participants(
     return participants
 
 
-@router.post(
-    "/chat",
-    # dependencies=[Depends(validate_token)],
-)
-async def create_chat(
-        chat: Chat
-):
-    result = await student_service.create_chat(chat=chat)
-
-    if not result:
-        raise HTTPException(status_code=400, detail="Error while getting chats")
-
-    return result
-
-
 @router.websocket(
     "/ws/login"
 )
 async def websocket_login(
         websocket: WebSocket
 ):
-    await student_service.login(websocket)
+    await student_service.login(websocket=websocket, database=postgres_database)
 
 
 @router.websocket(
@@ -201,4 +202,4 @@ async def websocket_login(
 async def websocket_connect(
         websocket: WebSocket
 ):
-    await student_service.connect(websocket)
+    await student_service.connect(websocket=websocket, database=postgres_database)
