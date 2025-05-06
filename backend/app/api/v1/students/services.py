@@ -137,6 +137,14 @@ class StudentService:
         await message_db.insert()
         print("Added message")
 
+        chat = await Chat.get(ObjectId(message.chat_id))
+
+        chat_participants = chat.participants
+
+        print(chat_participants)
+
+        await websockets_helper.send_message(chat_participants, message)
+
         return message_db
 
     @classmethod
@@ -172,8 +180,8 @@ class StudentService:
             async with session.begin():
                 for participant in chat.participants:
                     result = await session.execute(select(Student)
-                                                   .where(Student.student_id == int(participant))
-                                                   )
+                        .where(Student.student_id == int(participant))
+                    )
                     student = result.scalar_one_or_none()
                     if student:
                         participants[student.student_id] = student.name

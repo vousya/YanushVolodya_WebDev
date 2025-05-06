@@ -4,7 +4,6 @@ let students = [];
 
 async function fetchStudents() {
   const token = sessionStorage.getItem("access_token");
-  console.log("token = ", token);
   const response = await fetch("http://127.0.0.1:8000/students", {
     method: "GET",
     headers: {
@@ -15,7 +14,6 @@ async function fetchStudents() {
   if(response.status === 401){
     window.location.href = "/index.html";
   };
-  console.log("Fetch Student:", data);
   students = data.students;
   renderTable();
   renderPagination();
@@ -161,6 +159,10 @@ if (access_token){
 
     socket.onmessage = function (event) {
         fetchStudents();
+        socket.onmessage = (event) => {
+            const msg = JSON.parse(event.data);
+            render_message(msg);
+        }
     };
 }
 
@@ -299,8 +301,6 @@ function add_row() {
         birthday: date,
         status: false
     };
-
-    console.log("Added student JSON:", JSON.stringify(student_json));
     
     const token = sessionStorage.getItem("access_token");
     fetch(`http://127.0.0.1:8000/students`, {
@@ -325,7 +325,6 @@ function add_row() {
         return response.json();
     })
     .then(data => {
-        console.log("Added student:", data);
         fetchStudents();
     })
     .catch(error => {
@@ -339,7 +338,6 @@ document.querySelectorAll(".remove-btn").forEach(button => {
     button.addEventListener("click", function() {
         const row = this.closest("tr");
         if (row.cells[0].querySelector("input").checked) {
-            console.log("Removing row:", row);
             open_remove_window(row);
         }
     });
@@ -378,7 +376,6 @@ function open_remove_window(row) {
             return response.json();
         })
         .then(data => {
-            console.log("Deleted student:", data);
             fetchStudents();
         })
         .catch(error => {
@@ -411,7 +408,6 @@ document.querySelectorAll(".edit-btn").forEach(button => {
     button.addEventListener("click", function(e) {
         let row = e.target.closest("tr");
         if (row.cells[0].querySelector("input").checked) {
-            console.log("Editing row:", row);
             open_edit_window(row);
         }
     });
@@ -468,8 +464,6 @@ function open_edit_window(row) {
                 birthday: date_input.value,
                 status: false
             };
-
-            console.log("Edited student JSON:", JSON.stringify(student_json));
             
             student_id = row.querySelector(".student-id").textContent;
 
@@ -556,7 +550,6 @@ async function load_chats() {
         }
 
         const chats = await response.json();
-        console.log(chats);
         
         const chatListContainer = document.getElementById('chat-list');
         
@@ -570,10 +563,99 @@ async function load_chats() {
             
             chatItem.setAttribute('data-chat-id', chat._id);
 
+            chatItem.addEventListener("click", (event) => {
+                const chat = event.target.closest("div");
+                load_messages(chat);
+            });
+
             chatListContainer.appendChild(chatItem);
         });
     } catch (error) {
         console.error("Error fetching student data:", error);
+    }
+}
+
+function getInitials(name) {
+    return name
+        .split(' ')
+        .map(n => n[0])
+        .join(' ');
+}
+
+
+function createProfilePic(name) {
+    const div = document.createElement('div');
+    div.textContent = getInitials(name);
+    div.style.width = '40px';
+    div.style.height = '40px';
+    div.style.borderRadius = '50%';
+    div.style.backgroundColor = "blue";
+    div.style.color = 'white';
+    div.style.display = 'flex';
+    div.style.alignItems = 'center';
+    div.style.justifyContent = 'center';
+    div.style.fontWeight = 'bold';
+    div.style.fontSize = '16px';
+    div.style.marginRight = '10px';
+    div.style.marginLeft = '10px';
+    div.style.flexShrink = '0';
+    return div;
+}
+
+let participants;
+let participants_profiles = {};
+
+function render_message(msg) {
+    const student_id = sessionStorage.getItem("student_id");
+    const messagesContainer = document.querySelector(".message-container");
+
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add("message");
+
+    if (msg.sender_id === student_id) {
+        messageDiv.classList.add("sent");
+    } else {
+        messageDiv.classList.add("received");
+    }
+
+    let profilePic = participants_profiles[msg.sender_id].cloneNode(true);;
+
+    const messageBody = document.createElement("div");
+    messageBody.classList.add("message-body");
+
+    const usernameDiv = document.createElement("div");
+    usernameDiv.classList.add("username");
+    usernameDiv.textContent = participants[msg.sender_id];
+
+    const contentDiv = document.createElement("div");
+    contentDiv.classList.add("message-content");
+    contentDiv.textContent = msg.text;
+
+    messageBody.appendChild(usernameDiv);
+    messageBody.appendChild(contentDiv);
+
+    messageDiv.appendChild(profilePic);
+    messageDiv.appendChild(messageBody);
+    messagesContainer.appendChild(messageDiv);
+}
+
+function render_participants(){
+    const chat_participants = document.getElementById("chat-participants");
+    for (const [id, profile] of Object.entries(participants_profiles)) {
+        const profile_container = document.createElement("div");
+        const profile_pic = profile.cloneNode(true);
+        const profile_username = document.createElement("div");
+        profile_username.classList.add("username");
+        profile_username.textContent = participants[id];
+        profile_container.appendChild(profile_pic);
+        profile_container.appendChild(profile_username);
+        chat_participants.appendChild(profile_container);
+    }
+}
+
+function create_profile_pics(){
+    for (const [id, name] of Object.entries(participants)) {
+        participants_profiles[id] = createProfilePic(name);
     }
 }
 
@@ -592,7 +674,10 @@ async function load_messages(chat) {
         throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
-    const participants = await response.json()
+    participants = await response.json();
+    create_profile_pics();
+
+    create_profile_pics();
 
     response = await fetch(`http://127.0.0.1:8000/messages?chat_id=${chat_id}`, {
         method: "GET",
@@ -601,45 +686,25 @@ async function load_messages(chat) {
         },
     });
     
-    const header = document.getElementById("chat-header");
+    const header = document.getElementById("chat-header-name");
     header.textContent = chat.textContent;
+    header.setAttribute('data-chat-id', chat_id);
 
+    let name = document.getElementById("profile-text").textContent;
+    document.getElementById("chat-profile-text").textContent = name;
     if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
     const messages = await response.json();
-    console.log("Messages:", messages);
     const messagesContainer = document.querySelector(".message-container");
-    console.log(messagesContainer);
-    const student_id = sessionStorage.getItem("student_id");
 
     messagesContainer.innerHTML = '';
 
+    render_participants();
+
     messages.forEach(msg => {
-        const messageDiv = document.createElement("div");
-        messageDiv.classList.add("message");
-    
-        if (msg.sender_id === student_id) {
-            messageDiv.classList.add("sent");
-        } else {
-            messageDiv.classList.add("received");
-        }
-    
-        const usernameDiv = document.createElement("div");
-        usernameDiv.classList.add("username");
-        let username = participants[msg.sender_id];
-        console.log(username);
-        usernameDiv.textContent = username;
-    
-        const contentDiv = document.createElement("div");
-        contentDiv.classList.add("message-content");
-        contentDiv.textContent = msg.text;
-    
-        messageDiv.appendChild(usernameDiv);
-        messageDiv.appendChild(contentDiv);
-    
-        messagesContainer.appendChild(messageDiv);
+        render_message(msg);
     });    
 }
 
@@ -649,7 +714,6 @@ async function load_page(){
     const current_chat = document.querySelector(".chat-item");
 
     let messages = await load_messages(current_chat);
-    console.log(messages);
 }
 
 
@@ -737,7 +801,6 @@ document.getElementById("logout-btn").addEventListener("click", async () => {
     });
 
     const result = await response.json();
-    console.log(result);
 
     sessionStorage.removeItem("access_token");
     window.location.href = "/frontend/login/index.html"; 
@@ -801,6 +864,10 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
             document.getElementById("login").style.display = "none";
             loadStudentProfile();
             fetchStudents();
+            socket.onmessage = (event) => {
+                const msg = JSON.parse(event.data);
+                render_message(msg);
+            }
         }
     };
 });
@@ -808,11 +875,10 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 document.getElementById("send-message-btn").addEventListener("click", () => {
     let input = document.getElementById("input-message");
     let message_text = input.value;
-    console.log("text:", message_text);
     input.value = "";
 
-    const current_chat = document.querySelector(".chat-item");
-    const chat_id = current_chat.getAttribute("data-chat-id");
+    const chat = document.getElementById("chat-header-name");
+    const chat_id = chat.getAttribute("data-chat-id");
     const sender_id = sessionStorage.getItem("student_id");
 
     const today = new Date();
@@ -820,36 +886,13 @@ document.getElementById("send-message-btn").addEventListener("click", () => {
         String(today.getMonth() + 1).padStart(2, '0') + "-" +
         String(today.getDate()).padStart(2, '0');
 
-
-    const messagesContainer = document.querySelector(".message-container");
-
-    const messageDiv = document.createElement("div");
-    messageDiv.classList.add("message");
-
-    messageDiv.classList.add("sent");
-
-    const usernameDiv = document.createElement("div");
-    usernameDiv.classList.add("username");
-    let username = document.getElementById("profile-text").textContent;
-    usernameDiv.textContent = username;
-
-    const contentDiv = document.createElement("div");
-    contentDiv.classList.add("message-content");
-    contentDiv.textContent = message_text;
-
-    messageDiv.appendChild(usernameDiv);
-    messageDiv.appendChild(contentDiv);
-
-    messagesContainer.appendChild(messageDiv);
-
     const message = {
         text: message_text,
         sender_id: sender_id,
         chat_id: chat_id,
         created_at: yyyy_mm_dd
     }
-
-    console.log("message:", message);
+        
     fetch(`http://localhost:8000/message`, {
     method: "POST",
     headers: {
@@ -868,6 +911,136 @@ document.getElementById("send-message-btn").addEventListener("click", () => {
     .catch(error => {
     console.error("Failed to send message:", error);
     });
+})
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+let selected_students = []
+let chat_participants = []; 
+let all_students = []; 
+
+const participantSearch = document.getElementById("participant-search");
+const dropdown = document.getElementById("participant-dropdown");
+const selectedContainer = document.getElementById("selected-participants");
+
+async function loadParticipants() {
+  try {
+    const response = await fetch("http://127.0.0.1:8000/students");
+    if (!response.ok) throw new Error("Failed to load participants");
+    const data = await response.json();
+    all_students = data.students;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function openModal() {
+  document.getElementById("create-chat-modal").style.display = "flex";
+  participantSearch.value = "";
+  dropdown.innerHTML = "";
+  dropdown.style.display = "none";
+  renderSelectedUsers();
+}
+
+document.getElementById("add-chat-cancel-btn").addEventListener("click", () => {
+    document.getElementById("create-chat-modal").style.display = "none";
+})
+
+participantSearch.addEventListener("input", () => {
+    const query = participantSearch.value;
+    dropdown.innerHTML = "";
+    const filtered = all_students.filter(student =>
+        student.name.includes(query) &&
+        !selected_students.includes(student.username)
+    ).slice(0, 5);
+
+    if (filtered.length > 0 && query !== "") {
+        dropdown.style.display = "block";
+        filtered.forEach(student => {
+            const option = document.createElement("div");
+            option.textContent = student.name;
+            option.style.padding = "6px";
+            option.style.cursor = "pointer";
+            option.addEventListener("click", () => selectUser(student));
+            dropdown.appendChild(option);
+      });
+    } else {
+        dropdown.style.display = "none";
+    }
+});
+
+function selectUser(student) {
+    selected_students.push(student.name);
+    chat_participants.push(student.student_id.toString());
+    dropdown.style.display = "none";
+    participantSearch.value = "";
+    renderSelectedUsers();
+}
+
+function renderSelectedUsers() {
+  selectedContainer.innerHTML = "";
+  selected_students.forEach(name => {
+    const tag = document.createElement("div");
+    tag.textContent = name;
+    tag.classList.add("participant-tag");
+    tag.style.padding = "6px 10px";
+    tag.style.background = "#cce5ff";
+    tag.style.borderRadius = "4px";
+    selectedContainer.appendChild(tag);
+  });
+}
+
+document.getElementById("add-chat").addEventListener("click", async () => {
+  await loadParticipants();
+  openModal();
+});
+
+document.getElementById("add-chat-create-chat-btn").addEventListener("click", () => {
+    const token = sessionStorage.getItem("access_token");
+
+    let chat_name = document.getElementById("chat-name").value;
+
+    const today = new Date();
+    const yyyy_mm_dd = today.getFullYear() + "-" + 
+        String(today.getMonth() + 1).padStart(2, '0') + "-" +
+        String(today.getDate()).padStart(2, '0');
+
+    const payload = {
+        name: chat_name,
+        participants: chat_participants,
+        created_at: yyyy_mm_dd
+    };
+    
+    fetch("http://127.0.0.1:8000/chat", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Chat created successfully:', data);
+    })
+    .catch(error => {
+        console.error('Error creating chat:', error);
+    });
+    document.getElementById("create-chat-modal").style.display = "none";
 })

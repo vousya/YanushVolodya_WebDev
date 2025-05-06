@@ -181,6 +181,7 @@
                             <img src="resources/home.svg" alt="home" width="50" height="50">
                         </a>
                         <span>Chats</span>
+                        <a id="add-chat">+</a>
                     </div>
                 </div>
                 <div id="chat-list" class="chat-list">
@@ -189,7 +190,18 @@
             </div>
         
             <div class="chat-window">
-                <div id="chat-header" class="chat-header"></div>
+                <div id="chat-header" class="chat-header">
+                    <a id="chat-header-name" data-chat-id=""></a>
+                    <div id="chat-profile" class="profile">
+                        <button class="profile-btn">
+                            <img src="resources/profile.svg" alt="profile" width="50" height="50">
+                            <span class="profile-text" id="chat-profile-text">Vovus Pokus</span>
+                        </button>
+                    </div>
+                </div>
+                <div id="chat-participants">
+
+                </div>
                 <div class="message-container">
                 
                 </div>
@@ -200,6 +212,25 @@
                 </div>
             </div>
         </div>
+        <div id="create-chat-modal" class="modal">
+            <div id="modal-content" class="modal-content">
+                <h2>Create New Chat</h2>
+                <label for="chat-name">Chat Name:</label>
+                <input type="text" id="chat-name" placeholder="Enter chat name">
+                
+                <label for="participant-search">Add Participants:</label>
+                <input type="text" id="participant-search" placeholder="Search username...">
+                <div id="participant-dropdown" class="dropdown"></div>
+                <div id="selected-participants" class="selected-participants"></div>
+
+
+                <div id="modal-actions" class="modal-actions">
+                    <button id="add-chat-cancel-btn">Cancel</button>
+                    <button id="add-chat-create-chat-btn">Create Chat</button>
+                </div>
+            </div>
+        </div>
+
     </div>    
 
     <script src="script.js"></script>

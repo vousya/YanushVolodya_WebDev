@@ -11,7 +11,7 @@ router = APIRouter(tags=["Students"])
 
 @router.get(
     "/students",
-    dependencies=[Depends(validate_token)],
+    #dependencies=[Depends(validate_token)],
     response_model=StudentsResponse
 )
 async def get_students():
@@ -116,7 +116,7 @@ async def delete_student(
 async def send_message(
         message: Message
 ):
-    print(message)
+    print("message: ", message)
     message = await student_service.send_message(database=mongo_database, message=message)
 
     if not message:
@@ -134,9 +134,6 @@ async def get_messages(
         chat_id: str
 ):
     messages = await student_service.get_messages(chat_id=chat_id)
-
-    if not messages:
-        raise HTTPException(status_code=400, detail="Error while getting messages")
 
     return messages
 
@@ -193,6 +190,7 @@ async def get_participants(
 async def websocket_login(
         websocket: WebSocket
 ):
+    print("login")
     await student_service.login(websocket=websocket, database=postgres_database)
 
 

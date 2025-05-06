@@ -1,7 +1,8 @@
 from fastapi import WebSocket, WebSocketDisconnect
+from fastapi.encoders import jsonable_encoder
 
 from app.core.aunthefication import authenticate_user, create_access_token, get_student_id
-from app.core.models import Student
+from app.core.models import Student, Message
 
 import json
 from sqlalchemy import select
@@ -28,6 +29,7 @@ class WebSocketsHelper:
 
     @classmethod
     async def login(cls, websocket: WebSocket, database):
+
         student_id = None
         try:
             await websocket.accept()
@@ -107,22 +109,32 @@ class WebSocketsHelper:
         cls.active_connections.pop(student_id, None)
         print(f"{student_id} disconnected")
 
+    @classmethod
+    async def send_message(cls, user_ids : list[str], message : Message):
+        print("message inside websocket helper: ", message)
+        for user in user_ids:
+            if user in cls.active_connections:
+                await cls.active_connections[user].send_text(
+                    json.dumps(jsonable_encoder(message))
+                )
 
-    def is_active(self, user_id: str) -> bool:
-        return user_id in self.active_connections
+                print(f"message: {message} is sent to user: {user}")
 
-    async def send_personal_message(self, user_id: str, message: str):
-        if user_id in self.active_connections:
-            websocket = self.active_connections[user_id]
-            await websocket.send_text(message)
-
-    async def broadcast_to_users(self, user_ids: list[str], message: str):
-        for user_id in user_ids:
-            if self.is_active(user_id):
-                try:
-                    await self.send_personal_message(user_id, message)
-                except Exception as e:
-                    print(f"Error sending to {user_id}: {e}")
+    # def is_active(self, user_id: str) -> bool:
+    #     return user_id in self.active_connections
+    #
+    # async def send_personal_message(self, user_id: str, message: str):
+    #     if user_id in self.active_connections:
+    #         websocket = self.active_connections[user_id]
+    #         await websocket.send_text(message)
+    #
+    # async def broadcast_to_users(self, user_ids: list[str], message: str):
+    #     for user_id in user_ids:
+    #         if self.is_active(user_id):
+    #             try:
+    #                 await self.send_personal_message(user_id, message)
+    #             except Exception as e:
+    #                 print(f"Error sending to {user_id}: {e}")
 
 
 websockets_helper = WebSocketsHelper()
