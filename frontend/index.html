@@ -30,11 +30,8 @@
                 <button class="bell-btn">
                     <img src="resources/bell.svg" alt="bell" width="50" height="50">
                 </button>
-            </div>
-            <div id="bell-messages" class="messages">
-                <p>No new messages</p>
-                <p>Meeting at 3 PM</p>
-                <p>System update available</p>
+
+                <div id="unread-messages" class="messages"></div>
             </div>
 
             <div id="profile" class="profile">
@@ -192,11 +189,19 @@
             <div class="chat-window">
                 <div id="chat-header" class="chat-header">
                     <a id="chat-header-name" data-chat-id=""></a>
-                    <div id="chat-profile" class="profile">
-                        <button class="profile-btn">
-                            <img src="resources/profile.svg" alt="profile" width="50" height="50">
-                            <span class="profile-text" id="chat-profile-text">Vovus Pokus</span>
-                        </button>
+                    <div class="right-menu">
+                        <div id="chat-bell" class="bell">
+                            <button class="bell-btn">
+                                <img src="resources/bell.svg" alt="bell" width="50" height="50">
+                            </button>
+                        </div>
+            
+                        <div id="chat-profile" class="profile">
+                            <button class="profile-btn">
+                                <img src="resources/profile.svg" alt="profile" width="50" height="50">
+                                <span class="profile-text" id="chat-profile-text">Vovus Pokus</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div id="chat-participants">

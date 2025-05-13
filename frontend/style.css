@@ -309,3 +309,16 @@ td img{
   .profile-options button:hover {
     background-color: #f0f0f0;
   }
+
+  .unread-message {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .msg-username {
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: left;
+  }

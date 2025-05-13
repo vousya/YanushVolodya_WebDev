@@ -81,7 +81,7 @@
     font-size: 20px;
     font-weight: bold;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -240,6 +240,7 @@
     padding: 10px;
     overflow-x: auto; 
     background-color: #f5f1f1;
+    height: 250px;
 }
 /* 
 #chat-participants div {

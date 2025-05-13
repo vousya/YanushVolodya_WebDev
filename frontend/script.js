@@ -12,7 +12,7 @@ async function fetchStudents() {
     });
   const data = await response.json();
   if(response.status === 401){
-    window.location.href = "/index.html";
+    window.location.href = "/frontend/index.html";
   };
   students = data.students;
   renderTable();
@@ -141,6 +141,39 @@ function renderPagination() {
   pagination.appendChild(createButton('→', currentPage + 1, currentPage === totalPages));
 }
 
+async function add_unread_message(msg){
+    bell_animation();
+    const unread_messages = document.getElementById("unread-messages");
+    const unread_message = document.createElement('div');
+    unread_message.classList.add("unread-message");
+
+    const usernameDiv = document.createElement("div");
+    usernameDiv.classList.add("msg-username");
+
+    const token = sessionStorage.getItem("access_token");
+    const response = await fetch(`http://localhost:8000/students/${msg.sender_id}`, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+    });
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const result = await response.json();
+
+    usernameDiv.textContent = result.name;
+
+    const contentDiv = document.createElement("div");
+    contentDiv.classList.add("msg-content");
+    contentDiv.textContent = msg.text;
+
+    unread_message.appendChild(usernameDiv);
+    unread_message.appendChild(contentDiv);
+    unread_messages.appendChild(unread_message);
+}
+
 let access_token = sessionStorage.getItem("access_token");
 if (access_token){
     document.getElementById("login").style.display = "none";
@@ -161,7 +194,14 @@ if (access_token){
         fetchStudents();
         socket.onmessage = (event) => {
             const msg = JSON.parse(event.data);
-            render_message(msg);
+            if (document.getElementById("communication").style.display === "flex"){  
+                render_message(msg);
+            }
+            else{
+                console.log("Entered(((");
+                add_unread_message(msg);
+            }
+            console.log("message accepted: ", msg);
         }
     };
 }
@@ -317,7 +357,7 @@ function add_row() {
             alert("⚠️ This student already exists. Please check the details and try again.");
         }
         if(response.status === 401){
-            window.location.href = "/frontend/login/index.html";
+            window.location.href = "/frontend/index.html";
         };
         if (!response.ok) {
             throw new Error("Failed to add student");
@@ -368,7 +408,7 @@ function open_remove_window(row) {
         })
         .then(response => {
             if(response.status === 401){
-                window.location.href = "/frontend/login/index.html";
+                window.location.href = "/frontend/index.html";
             };
             if (!response.ok) {
                 throw new Error("Failed to delete student");
@@ -618,7 +658,7 @@ function render_message(msg) {
         messageDiv.classList.add("received");
     }
 
-    let profilePic = participants_profiles[msg.sender_id].cloneNode(true);;
+    let profilePic = participants_profiles[msg.sender_id].cloneNode(true);
 
     const messageBody = document.createElement("div");
     messageBody.classList.add("message-body");
@@ -641,6 +681,7 @@ function render_message(msg) {
 
 function render_participants(){
     const chat_participants = document.getElementById("chat-participants");
+    chat_participants.innerHTML = '';
     for (const [id, profile] of Object.entries(participants_profiles)) {
         const profile_container = document.createElement("div");
         const profile_pic = profile.cloneNode(true);
@@ -654,6 +695,7 @@ function render_participants(){
 }
 
 function create_profile_pics(){
+    participants_profiles = {};
     for (const [id, name] of Object.entries(participants)) {
         participants_profiles[id] = createProfilePic(name);
     }
@@ -675,8 +717,6 @@ async function load_messages(chat) {
     }
 
     participants = await response.json();
-    create_profile_pics();
-
     create_profile_pics();
 
     response = await fetch(`http://127.0.0.1:8000/messages?chat_id=${chat_id}`, {
@@ -717,15 +757,12 @@ async function load_page(){
 }
 
 
-document.getElementById("bell").addEventListener('click', bell_animation);
+document.getElementById("bell").addEventListener('click', open_chats);
 
-function bell_animation(event) {
-    const bell = event.target;
-    
-    bell.classList.remove('swinging');
-    void bell.offsetWidth;
-    bell.classList.add('swinging');
-    let chats = document.getElementById("communication");
+function open_chats(){
+    const chats = document.getElementById("communication");
+    const unread_messages = document.getElementById("unread-messages");
+    unread_messages.innerHTML = '';
     chats.style.display = "flex";
     document.getElementById("home-logo").addEventListener("click", () =>{
         chats.style.display = "none";
@@ -733,8 +770,16 @@ function bell_animation(event) {
     load_page();
 }
 
+function bell_animation() {
+    const bell = document.getElementById("bell");
+    
+    bell.classList.remove('swinging');
+    void bell.offsetWidth;
+    bell.classList.add('swinging');
+}
+
 let bell = document.getElementById("bell");
-let messages = document.getElementById("bell-messages");
+let messages = document.getElementById("unread-messages");
 let hideTimeout;
 
 bell.addEventListener("mouseenter", function() {
@@ -803,7 +848,7 @@ document.getElementById("logout-btn").addEventListener("click", async () => {
     const result = await response.json();
 
     sessionStorage.removeItem("access_token");
-    window.location.href = "/frontend/login/index.html"; 
+    window.location.href = "/frontend/index.html"; 
 });
 
 async function loadStudentProfile() {
@@ -866,7 +911,14 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
             fetchStudents();
             socket.onmessage = (event) => {
                 const msg = JSON.parse(event.data);
-                render_message(msg);
+                if (document.getElementById("communication").style.display === "flex"){  
+                    render_message(msg);
+                }
+                else{
+                    console.log("LALALA");
+                    add_unread_message(msg.text);
+                }
+                console.log("message accepted: ", msg);
             }
         }
     };
@@ -950,6 +1002,8 @@ function openModal() {
   participantSearch.value = "";
   dropdown.innerHTML = "";
   dropdown.style.display = "none";
+  let current_student = document.getElementById("profile-text").textContent;
+  selected_students.push(current_student);
   renderSelectedUsers();
 }
 
@@ -962,8 +1016,9 @@ participantSearch.addEventListener("input", () => {
     dropdown.innerHTML = "";
     const filtered = all_students.filter(student =>
         student.name.includes(query) &&
-        !selected_students.includes(student.username)
+        !selected_students.includes(student.name)
     ).slice(0, 5);
+
 
     if (filtered.length > 0 && query !== "") {
         dropdown.style.display = "block";

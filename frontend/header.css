@@ -78,7 +78,7 @@ img {
     height: auto;
 }
 
-#bell-messages {
+#unread-messages {
     position: absolute;
     top: 60px; /* Below the header */
     right: 15%; /* Align with bell */
@@ -92,7 +92,7 @@ img {
     z-index: 1000;
 }
 
-#bell-messages p {
+#unread-messages div {
     margin: 5px 0;
     padding: 8px;
     font-size: 14px;
