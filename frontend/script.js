@@ -141,6 +141,52 @@ function renderPagination() {
   pagination.appendChild(createButton('→', currentPage + 1, currentPage === totalPages));
 }
 
+async function open_chat(e){
+    const msg = e.target.closest("div.unread-message");
+    const chat_id = msg.querySelector(".msg-chat-id").textContent;
+    const communication = document.getElementById("communication");
+    communication.style.display = "flex";
+
+    const token = sessionStorage.getItem("access_token");
+    const response = await fetch(`http://localhost:8000/chats?access_token=${token}`, {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Accept": "application/json",
+        },
+    });
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const chats = await response.json();
+
+    console.log(chats);
+    let current_chat;
+    chats.forEach(chat => {
+        if (chat._id === chat_id){
+            current_chat = chat;
+            console.log(chat);
+        }
+    });
+
+    const chat = document.createElement('div');
+    chat.classList.add('chat-item');
+            
+    chat.textContent = current_chat.name;
+            
+    chat.setAttribute('data-chat-id', current_chat._id);
+
+    load_chats();
+    load_messages(chat);
+
+    const unread_messages = document.getElementById("unread-messages");
+    unread_messages.innerHTML = '';
+    communication.style.display = "flex";
+    document.getElementById("home-logo").addEventListener("click", () =>{
+        communication.style.display = "none";
+    })
+}
+
 async function add_unread_message(msg){
     bell_animation();
     const unread_messages = document.getElementById("unread-messages");
@@ -169,8 +215,17 @@ async function add_unread_message(msg){
     contentDiv.classList.add("msg-content");
     contentDiv.textContent = msg.text;
 
+    const chatidDiv = document.createElement("div");
+    chatidDiv.classList.add("msg-chat-id");
+    chatidDiv.textContent = msg.chat_id;
+    chatidDiv.style.display = "none";
+
+    unread_message.appendChild(chatidDiv);
     unread_message.appendChild(usernameDiv);
     unread_message.appendChild(contentDiv);
+
+    unread_message.addEventListener("click", open_chat);
+
     unread_messages.appendChild(unread_message);
 }
 
@@ -198,7 +253,6 @@ if (access_token){
                 render_message(msg);
             }
             else{
-                console.log("Entered(((");
                 add_unread_message(msg);
             }
             console.log("message accepted: ", msg);
@@ -624,6 +678,7 @@ function getInitials(name) {
 
 
 function createProfilePic(name) {
+    const profileName = document.getElementById("profile-text");
     const div = document.createElement('div');
     div.textContent = getInitials(name);
     div.style.width = '40px';
@@ -639,6 +694,10 @@ function createProfilePic(name) {
     div.style.marginRight = '10px';
     div.style.marginLeft = '10px';
     div.style.flexShrink = '0';
+    if(name === profileName.textContent){
+        div.style.backgroundColor = "yellow";
+        div.style.color = 'black';
+    }
     return div;
 }
 
@@ -753,11 +812,11 @@ async function load_page(){
 
     const current_chat = document.querySelector(".chat-item");
 
-    let messages = await load_messages(current_chat);
+    load_messages(current_chat);
 }
 
 
-document.getElementById("bell").addEventListener('click', open_chats);
+document.getElementById("bell-btn").addEventListener('click', open_chats);
 
 function open_chats(){
     const chats = document.getElementById("communication");
@@ -767,6 +826,7 @@ function open_chats(){
     document.getElementById("home-logo").addEventListener("click", () =>{
         chats.style.display = "none";
     })
+
     load_page();
 }
 
@@ -915,7 +975,6 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
                     render_message(msg);
                 }
                 else{
-                    console.log("LALALA");
                     add_unread_message(msg.text);
                 }
                 console.log("message accepted: ", msg);
@@ -1002,8 +1061,10 @@ function openModal() {
   participantSearch.value = "";
   dropdown.innerHTML = "";
   dropdown.style.display = "none";
-  let current_student = document.getElementById("profile-text").textContent;
+  const current_student = document.getElementById("profile-text").textContent;
+  const student_id = sessionStorage.getItem("student_id");
   selected_students.push(current_student);
+  chat_participants.push(student_id.toString());
   renderSelectedUsers();
 }
 
@@ -1098,4 +1159,5 @@ document.getElementById("add-chat-create-chat-btn").addEventListener("click", ()
         console.error('Error creating chat:', error);
     });
     document.getElementById("create-chat-modal").style.display = "none";
-})
+    load_chats();
+});

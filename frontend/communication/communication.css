@@ -238,11 +238,10 @@
     gap: 20px; 
     align-items: center;
     padding: 10px;
-    overflow-x: auto; 
     background-color: #f5f1f1;
-    height: 250px;
+    height: 75px;
 }
-/* 
-#chat-participants div {
 
-} */
+#chat-participants .current-student {
+    background-color: black;
+}
