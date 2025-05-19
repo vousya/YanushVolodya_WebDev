@@ -203,6 +203,26 @@ class StudentService:
         return new_chat
 
     @classmethod
+    async def edit_chat(cls, chat_id, chat_update_data):
+        chat = await Chat.get(chat_id)
+        if not chat:
+            raise ValueError(f"Chat with id {chat_id} not found")
+
+        if hasattr(chat_update_data, "name") and chat_update_data.name is not None:
+            chat.name = chat_update_data.name
+
+        if hasattr(chat_update_data, "participants") and chat_update_data.participants is not None:
+            chat.participants = chat_update_data.participants
+
+        if hasattr(chat_update_data, "created_at") and chat_update_data.created_at is not None:
+            chat.created_at = chat_update_data.created_at
+
+        await chat.save()
+        print(f"Patched chat {chat_id}")
+
+        return chat
+
+    @classmethod
     async def login(cls, websocket, database):
         result = await websockets_helper.login(websocket=websocket, database=database)
 

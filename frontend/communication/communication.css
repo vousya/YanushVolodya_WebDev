@@ -187,7 +187,13 @@
     background-color: #1a252f;
 }
 
-#create-chat-modal {
+#add-participants {
+    font-size: 50px;
+    color: black;
+    background-color: #f5f1f1;
+}
+
+#create-chat-modal, #edit-chat-modal {
     display: none;
     position: fixed;
     z-index: 2000;
@@ -198,21 +204,23 @@
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-#modal-content {
+#edit-modal-content, #create-modal-content {
     background-color: #fff;
     padding: 20px;
     margin: 10% auto;
+    margin-top: 5%;
     border-radius: 10px;
-    width: 300px;
+    height: 600px;
+    width: 400px;
 }
 
-#modal-actions {
+#create-modal-actions, #edit-modal-actions {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
 }
 
-#create-chat-modal button {
+#create-chat-modal button, #edit-chat-modal button {
     padding: 10px;
     background-color: #007BFF;
     color: white;
@@ -221,11 +229,11 @@
     cursor: pointer;
 }
 
-#create-chat-modal button:hover {
+#create-chat-modal button:hover, #edit-chat-modal button:hover {
     background-color: #0056b3;
 }
 
-#create-chat-modal input {
+#create-chat-modal, #edit-chat-modal input {
     width: 100%;
     padding: 8px;
     margin: 10px 0;
@@ -244,4 +252,13 @@
 
 #chat-participants .current-student {
     background-color: black;
+}
+
+#chat-participants-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    background-color: #f5f1f1;
+    align-items: center;
+    padding-left: 10px;
 }

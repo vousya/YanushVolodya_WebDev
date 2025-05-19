@@ -179,8 +179,6 @@ async function open_chat(e){
     load_chats();
     load_messages(chat);
 
-    const unread_messages = document.getElementById("unread-messages");
-    unread_messages.innerHTML = '';
     communication.style.display = "flex";
     document.getElementById("home-logo").addEventListener("click", () =>{
         communication.style.display = "none";
@@ -249,11 +247,22 @@ if (access_token){
         fetchStudents();
         socket.onmessage = (event) => {
             const msg = JSON.parse(event.data);
-            if (document.getElementById("communication").style.display === "flex"){  
-                render_message(msg);
+            if (document.getElementById("communication").style.display === "none"){  
+                add_unread_message(msg);
             }
             else{
-                add_unread_message(msg);
+                const current_chat_id = document.getElementById("chat-header-name").getAttribute("data-chat-id");
+                if (msg.chat_id !== current_chat_id){
+                    add_unread_message(msg);
+                    const chat_bell = document.getElementById("chat-bell");
+    
+                    chat_bell.classList.remove('swinging');
+                    void chat_bell.offsetWidth;
+                    chat_bell.classList.add('swinging');
+                }
+                else{
+                    render_message(msg);
+                }
             }
             console.log("message accepted: ", msg);
         }
@@ -763,6 +772,18 @@ function create_profile_pics(){
 async function load_messages(chat) {
     const token = sessionStorage.getItem("access_token");
     const chat_id = chat.getAttribute("data-chat-id");
+    const unreadmessages = document.getElementById("unread-messages");
+
+    const unread_messages = document.querySelectorAll('#unread-messages .unread-message');
+    Array.from(unread_messages).filter(msg => {
+        console.log(msg);
+        const idElement = msg.querySelector('.msg-chat-id');
+        if (idElement && idElement.textContent.trim() === chat_id){
+            console.log("to remove:", msg);
+            unreadmessages.removeChild(msg);
+        }
+    });
+
 
     let response = await fetch(`http://127.0.0.1:8000/participants?chat_id=${chat_id}`, {
         method: "GET",
@@ -802,6 +823,10 @@ async function load_messages(chat) {
 
     render_participants();
 
+    if (!messages){
+        return;
+    }
+
     messages.forEach(msg => {
         render_message(msg);
     });    
@@ -819,9 +844,9 @@ async function load_page(){
 document.getElementById("bell-btn").addEventListener('click', open_chats);
 
 function open_chats(){
+    const chat_bell = document.getElementById("chat-bell");
+    chat_bell.classList.remove('swinging');
     const chats = document.getElementById("communication");
-    const unread_messages = document.getElementById("unread-messages");
-    unread_messages.innerHTML = '';
     chats.style.display = "flex";
     document.getElementById("home-logo").addEventListener("click", () =>{
         chats.style.display = "none";
@@ -839,8 +864,18 @@ function bell_animation() {
 }
 
 let bell = document.getElementById("bell");
+let chat_bell = document.getElementById("chat-bell");
 let messages = document.getElementById("unread-messages");
 let hideTimeout;
+
+chat_bell.addEventListener("mouseenter", function() {
+    clearTimeout(hideTimeout);
+    messages.style.display = "block";
+});
+
+chat_bell.addEventListener("mouseleave", function() {
+    hideTimeout = setTimeout(() => messages.style.display = "none", 300);
+});
 
 bell.addEventListener("mouseenter", function() {
     clearTimeout(hideTimeout);
@@ -1041,9 +1076,13 @@ let selected_students = []
 let chat_participants = []; 
 let all_students = []; 
 
-const participantSearch = document.getElementById("participant-search");
-const dropdown = document.getElementById("participant-dropdown");
-const selectedContainer = document.getElementById("selected-participants");
+const participantSearch = document.getElementById("create-participant-search");
+const dropdown = document.getElementById("create-participant-dropdown");
+const selectedContainer = document.getElementById("create-selected-participants");
+
+const edit_participantSearch = document.getElementById("edit-participant-search");
+const edit_dropdown = document.getElementById("edit-participant-dropdown");
+const edit_selectedContainer = document.getElementById("edit-selected-participants");
 
 async function loadParticipants() {
   try {
@@ -1118,14 +1157,17 @@ function renderSelectedUsers() {
 }
 
 document.getElementById("add-chat").addEventListener("click", async () => {
-  await loadParticipants();
-  openModal();
+    document.getElementById("create-selected-participants").innerHTML = '';
+    selected_students = [];
+    chat_participants = []; 
+    await loadParticipants();
+    openModal();
 });
 
 document.getElementById("add-chat-create-chat-btn").addEventListener("click", () => {
     const token = sessionStorage.getItem("access_token");
 
-    let chat_name = document.getElementById("chat-name").value;
+    let chat_name = document.getElementById("create-chat-name").value;
 
     const today = new Date();
     const yyyy_mm_dd = today.getFullYear() + "-" + 
@@ -1161,3 +1203,125 @@ document.getElementById("add-chat-create-chat-btn").addEventListener("click", ()
     document.getElementById("create-chat-modal").style.display = "none";
     load_chats();
 });
+
+async function patchChat(chatId, updatedChat) {
+    try {
+        console.log("chatid:", chatId, "\nupdated_chat: ", updatedChat);
+        const response = await fetch(`http://127.0.0.1:8000/chat/${chatId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedChat)
+        });
+        
+        
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Unknown error');
+        }
+
+        const result = await response.json();
+        console.log("Chat updated:", result);
+        const current_chat = document.getElementById("chat-header-name");
+        await load_messages(current_chat);
+        await load_chats();
+        render_participants();
+        document.getElementById("edit-chat-modal").style.display = 'none';
+        return result;
+
+    } catch (error) {
+        console.error("Failed to patch chat:", error.message);
+        return null;
+    }
+}
+
+function renderEditSelectedUsers() {
+    edit_selectedContainer.innerHTML = "";
+    selected_students.forEach(name => {
+      const tag = document.createElement("div");
+      tag.textContent = name;
+      tag.classList.add("participant-tag");
+      tag.style.padding = "6px 10px";
+      tag.style.background = "#cce5ff";
+      tag.style.borderRadius = "4px";
+      edit_selectedContainer.appendChild(tag);
+    });
+  }
+
+const add_participants = document.getElementById("add-participants");
+add_participants.addEventListener("click", async () => {
+    selected_students = Array.from(document.querySelectorAll('#chat-participants .username'))
+                   .map(div => div.textContent.trim());
+    
+    loadParticipants().then(response => {
+        selected_students.forEach(name => {
+            const match = all_students.find(student => student.name === name);
+            if (match) {
+                chat_participants.push(match.student_id.toString());
+            }
+        });
+        renderEditSelectedUsers();
+    });
+
+    document.getElementById("edit-chat-name").value = document.getElementById("chat-header-name").textContent;
+
+    document.getElementById("edit-chat-modal").style.display = "flex";
+    participantSearch.value = "";
+    edit_dropdown.innerHTML = "";
+    edit_dropdown.style.display = "none";
+});
+
+edit_participantSearch.addEventListener("input", () => {
+    const query = edit_participantSearch.value;
+    edit_dropdown.innerHTML = "";
+    const filtered = all_students.filter(student =>
+        student.name.includes(query) &&
+        !selected_students.includes(student.name)
+    ).slice(0, 5);
+
+
+    if (filtered.length > 0 && query !== "") {
+        edit_dropdown.style.display = "block";
+        filtered.forEach(student => {
+            const option = document.createElement("div");
+            option.textContent = student.name;
+            option.style.padding = "6px";
+            option.style.cursor = "pointer";
+            option.addEventListener("click", () => {
+                selected_students.push(student.name);
+                chat_participants.push(student.student_id.toString());
+                edit_dropdown.style.display = "none";
+                edit_participantSearch.value = "";
+                renderEditSelectedUsers();
+            });
+            edit_dropdown.appendChild(option);
+      });
+    } else {
+        edit_dropdown.style.display = "none";
+    }
+});
+
+document.getElementById("edit-chat-cancel-btn").addEventListener("click", () => {
+    document.getElementById("edit-chat-modal").style.display = "none";
+})
+
+document.getElementById("edit-chat-create-chat-btn").addEventListener("click", async () =>{
+    const chat = document.getElementById("chat-header-name");
+    const chat_id = chat.getAttribute("data-chat-id");
+
+    const chat_name = document.getElementById("chat-header-name").textContent;
+
+    const today = new Date();
+    const yyyy_mm_dd = today.getFullYear() + "-" + 
+        String(today.getMonth() + 1).padStart(2, '0') + "-" +
+        String(today.getDate()).padStart(2, '0');
+
+    const updated_chat = {
+        name: chat_name,
+        participants: chat_participants,
+        created_at: yyyy_mm_dd
+    };
+    await patchChat(chat_id, updated_chat);
+})

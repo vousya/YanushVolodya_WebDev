@@ -118,7 +118,7 @@ class WebSocketsHelper:
                     json.dumps(jsonable_encoder(message))
                 )
 
-                print(f"message: {message} is sent to user: {user}")
+                print(f"\nmessage: {message} is sent to user: {user}\n")
 
     # def is_active(self, user_id: str) -> bool:
     #     return user_id in self.active_connections

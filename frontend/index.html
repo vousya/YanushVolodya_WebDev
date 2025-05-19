@@ -191,7 +191,7 @@
                     <a id="chat-header-name" data-chat-id=""></a>
                     <div class="right-menu">
                         <div id="chat-bell" class="bell">
-                            <button class="bell-btn">
+                            <button id="chat-bell-btn" class="bell-btn">
                                 <img src="resources/bell.svg" alt="bell" width="50" height="50">
                             </button>
                         </div>
@@ -204,8 +204,11 @@
                         </div>
                     </div>
                 </div>
-                <div id="chat-participants">
+                <div id="chat-participants-wrapper">
+                    <a id="add-participants">+</a>
+                    <div id="chat-participants">
 
+                    </div>
                 </div>
                 <div class="message-container">
                 
@@ -218,20 +221,38 @@
             </div>
         </div>
         <div id="create-chat-modal" class="modal">
-            <div id="modal-content" class="modal-content">
+            <div id="create-modal-content" class="modal-content">
                 <h2>Create New Chat</h2>
                 <label for="chat-name">Chat Name:</label>
-                <input type="text" id="chat-name" placeholder="Enter chat name">
+                <input type="text" id="create-chat-name" placeholder="Enter chat name">
                 
                 <label for="participant-search">Add Participants:</label>
-                <input type="text" id="participant-search" placeholder="Search username...">
-                <div id="participant-dropdown" class="dropdown"></div>
-                <div id="selected-participants" class="selected-participants"></div>
+                <input type="text" id="create-participant-search" placeholder="Search username...">
+                <div id="create-participant-dropdown" class="dropdown"></div>
+                <div id="create-selected-participants" class="selected-participants"></div>
 
 
-                <div id="modal-actions" class="modal-actions">
+                <div id="create-modal-actions" class="modal-actions">
                     <button id="add-chat-cancel-btn">Cancel</button>
                     <button id="add-chat-create-chat-btn">Create Chat</button>
+                </div>
+            </div>
+        </div>
+        <div id="edit-chat-modal" class="modal">
+            <div id="edit-modal-content" class="modal-content">
+                <h2>Edit Participants</h2>
+                <label for="chat-name">Chat Name:</label>
+                <input type="text" id="edit-chat-name" placeholder="Enter chat name">
+                
+                <label for="participant-search">Add Participants:</label>
+                <input type="text" id="edit-participant-search" placeholder="Search username...">
+                <div id="edit-participant-dropdown" class="dropdown"></div>
+                <div id="edit-selected-participants" class="selected-participants"></div>
+
+
+                <div id="edit-modal-actions" class="modal-actions">
+                    <button id="edit-chat-cancel-btn">Cancel</button>
+                    <button id="edit-chat-create-chat-btn">Edit Chat</button>
                 </div>
             </div>
         </div>

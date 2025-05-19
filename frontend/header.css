@@ -89,7 +89,7 @@ img {
     width: 220px;
     border-radius: 5px;
     display: none;
-    z-index: 1000;
+    z-index: 2000;
 }
 
 #unread-messages div {

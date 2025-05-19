@@ -152,6 +152,22 @@ async def create_chat(
 
     return result
 
+@router.patch(
+    "/chat/{chat_id}",
+    # dependencies=[Depends(validate_token)],
+)
+async def edit_chat(
+        chat_id : str,
+        chat: Chat
+):
+    print("\n\n\nchat_id: ", chat_id, "\nchat: ", chat, "\n\n\n")
+    result = await student_service.edit_chat(chat_id=chat_id, chat_update_data=chat)
+
+    if not result:
+        raise HTTPException(status_code=400, detail="Error while getting chats")
+
+    return result
+
 
 @router.get(
     "/chats",
